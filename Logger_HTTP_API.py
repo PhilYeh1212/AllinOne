@@ -2,50 +2,60 @@ import os
 import time
 import requests
 
-
 print('Version-1.2')
+session = requests.session()
 today = time.strftime('%y%m%d', time.localtime())
-RAWpathtoday = '%s_%s.%s' % ('API_Log', today, 'txt')
-ALMpathtoday = '%s_%s.%s' % ('API_Log_Alarm', today, 'txt')
 lastTI = 0
 URL1 = 'https://pmsdata.formosasolar.com.tw/realtime/extel'
 URL2 = 'https://pmsdata.formosasolar.com.tw/realtime/extel/alarm'
 RAWline = ''
 ALMline = ''
-datafiles = os.listdir(r'C:\HTTPUpload')
+datafiles = os.listdir(r'D:\FSLG_PMS\HTTPBySPV')
 datafileslen = len(datafiles)
-for datafileslen in datafiles:
+if not os.path.isdir('%s\%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today)):
+    os.mkdir('%s\%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today))
+
+for SPV in datafiles:
     try:
-        RAWpaths = os.listdir('%s\%s' % (r'C:\HTTPUpload', datafileslen))
-        with open('%s\%s\%s' % (r'C:\HTTPUpload', datafileslen, RAWpaths[1]), 'r') as filesRAW:
-            RAWdata = filesRAW.readlines()
-            RAWline = str(RAWdata)
-            #for lenRAW in RAWdata:
-            #    RAWline = RAWline + lenRAW
-        with open('%s\%s\%s' % (r'C:\HTTPUpload', datafileslen, RAWpaths[0]), 'r') as filesALM:
-            ALMdata = filesALM.readlines()
-            ALMline = str(ALMdata)
-            #for lenALM in ALMdata:
-            #    ALMline = ALMline + lenALM
+        RAWpath = os.listdir('%s\%s' % (r'D:\FSLG_PMS\HTTPBySPV', SPV))
+        for y in RAWpath:
+            rawdatapath = os.listdir('%s\%s\%s' % (r'D:\FSLG_PMS\HTTPBySPV', SPV, y))
+            with open('%s\%s\%s\%s' % (r'D:\FSLG_PMS\HTTPBySPV', SPV, y, rawdatapath[1]), 'r') as filesRAW:
+                RAWdata = filesRAW.readlines()
+                lenRAW = str(RAWdata)
+                for lenRAW in RAWdata:
+                    RAWline = RAWline + lenRAW
+            with open('%s\%s\%s\%s' % (r'D:\FSLG_PMS\HTTPBySPV', SPV, y, rawdatapath[0]), 'r') as filesALM:
+                ALMdata = filesALM.readlines()
+                lenALM = str(ALMdata)
+                for lenALM in ALMdata:
+                    ALMline = ALMline + lenALM
             timenow = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             try:
-                uploadlist1 = requests.post(URL1, RAWline)
-                print(timenow, datafileslen, uploadlist1)
-                with open(RAWpathtoday, 'a+') as RAWtxt:
+                uploadlist1 = session.post(URL1, RAWline)
+                print(timenow, y, uploadlist1)
+                with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today, 'API_Log', today, y, 'txt'), 'a+') as RAWtxt:
+                    RAWtxt.write(timenow + '\n')
+                    RAWtxt.write(RAWline)
+            except Exception as e:
+                with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today, 'API_Log', today, y, 'txt'),
+                          'a+') as RAWwrite:
                     RAWtxt.write(timenow, RAWline)
-            except Exception as e:
-                with open('%s_%s.%s' % (r'C:\HTTPpy\temp\temp_raw', datafileslen, 'txt'), 'w') as RAWwrite:
-                    RAWwrite.write(RAWline)
             try:
-                uploadlist2 = requests.post(URL2, ALMline)
-                print(timenow, datafileslen, uploadlist2)
-                with open(ALMpathtoday, 'a+') as ALMtxt:
-                    ALMtxt.write(timenow, ALMline)
+                uploadlist2 = session.post(URL2, ALMline)
+                print(timenow, y, uploadlist2)
+                with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today, 'API_Log_Alarm', today, y, 'txt'),
+                          'a+') as ALMtxt:
+                    ALMtxt.write(timenow + '\n')
+                    ALMtxt.write(ALMline)
             except Exception as e:
-                with open('%s_%s.%s' % (r'C:\HTTPpy\temp\temp_alm', datafileslen, 'txt'), 'w') as ALMwrite:
-                    ALMwrite.write(ALMline)
+                with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLG_PMS\HTTPpy\temp', today, 'API_Log_Alarm', today, y, 'txt'),
+                          'a+') as ALMwrite:
+                    ALMtxt.write(timenow, ALMline)
 
             RAWline = ''
             ALMline = ''
     except Exception as e:
         print(e)
+
+
