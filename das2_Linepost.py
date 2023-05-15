@@ -95,10 +95,10 @@ print(num2)
 print(offgridLostdata)
 if num2 <= 0:
     message = "OK"
-    lineNotifyMessage(token2, message)
+    lineNotifyMessage(token6, message)
 if num2 > 0:
     message = ('缺資料機台共'+str(num2)+'台\n'), offgridLostdata
-    lineNotifyMessage(token2, message)
+    lineNotifyMessage(token6, message)
 
 
 CloseErr = []
@@ -159,10 +159,10 @@ num4 = len(OpenErr)
 
 if num4 <= 0:
     message = "OK"
-    lineNotifyMessage(token4, message)
+    lineNotifyMessage(token2, message)
 if  num4 > 0:
     message = (('未正常開蓋機台共' + str(num4) + '台\n'), OpenErr)
-    lineNotifyMessage(token4, message)
+    lineNotifyMessage(token2, message)
 
 Threedata1 = []
 FTP1 = []
@@ -239,9 +239,9 @@ data5 = list(zip(DASID, soiling))
 
 if num6 <= 0:
     message = "OK"
-    lineNotifyMessage(token6, message)
+    lineNotifyMessage(token4, message)
 if num6 >= 1:
     for y in data5:
         datastr = datastr + str(y[0]) + ',' + str(y[1]) + '\n'
     message = (('負Soiling機台共' + str(num6) + '台\n'), datastr)
-    lineNotifyMessage(token6, message)
+    lineNotifyMessage(token4, message)

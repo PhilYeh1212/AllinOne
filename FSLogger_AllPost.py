@@ -35,7 +35,6 @@ if num1 <= 0:
     message = "案場正常上傳"
     lineNotifyMessage(token1, message)
 if num1 > 0:
-    #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
     message = ((('未正常上傳案場共'+str(num1)+'場'), sorted(Notupload)))
     lineNotifyMessage(token1, message)
 # 自檢2
@@ -78,39 +77,52 @@ with open(r'C:\FS100.txt', 'r') as f:
         message = "無夜間Power"
         lineNotifyMessage(token2, message)
     if num2 > 0:
-        #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
         message = ((('夜間Inverter有讀值案場'+str(num2)+'場'), sorted(NightPowerError)))
         lineNotifyMessage(token2, message)
 
 # 自檢3
+StartTime = '10:00:00'
+EndTime = '10:00:00'
+k = 0
 Zero = []
-#sql1 = "%s'%s'" % ('SELECT Extel_code FROM FS_Logger_Global.Site_list where DAQ_DAte != ', Today)
-sql4 = "SELECT Extel_code FROM FS_Logger_Global.Site_list where Instant_Power = 0"
-cursor3 = mydb.cursor()
-cursor3.execute(sql4)
-Zerodata = cursor3.fetchall()
-print(Zerodata)
+ZeroPower = []
+sitecode8 = []
 
-for k in Zerodata:
-    Extel_code = k
-    Zero.append(Extel_code[0])
-
-num3 = len(Zero)
-
-if num3 <= 0:
-    message = "案場正常發電"
-    lineNotifyMessage(token3, message)
-if num3 > 0:
-    #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
-    message = (((' Inverter發電量為零的案場共'+str(num3)+'台'), sorted(Zero)))
-    lineNotifyMessage(token3, message)
+with open(r'C:\FS100.txt', 'r') as f:
+    for i in range(0, 100):
+        sitecode8.append(f.readline().replace('\n', ''))
+        sql13 = "%s%s.%s %s'%s'%s'%s'%s'%s'" % ('SELECT INVID FROM FSLG_', sitecode8[i], 'T2_inv where INVXX08 <= 0', 'and DAQ_DAte =', Today,' and DAQ_Time BETWEEN ', StartTime, ' AND ', EndTime)
+        sql14 = "SELECT Site_code, Extel_code FROM FS_Logger_Global.Site_list"
+        print(sql13)
+        cursor12 = mydb.cursor()
+        cursor12.execute(sql13)
+        ZeroOnline = cursor12.fetchall()
+        cursor13 = mydb.cursor()
+        cursor13.execute(sql14)
+        FS100 = cursor13.fetchall()
+        if not ZeroOnline:
+            pass
+        else:
+            data, Invcode = sitecode8[i], ZeroOnline
+            Invcode = ' '.join(str(i) for i in Invcode)
+            Invcode = Invcode.replace('(', '').replace(',', '').replace(')', '')
+            for q in range(len(FS100)):
+                if (FS100[q][0]) == (data):
+                    ZeroPower.append(FS100[q][1]+'_'+data + '_' + Invcode + '\n')
+    num = len(ZeroPower)
+    print(ZeroPower)
+    if num <= 0:
+        message = "Inverter發電量為零_全案場正常"
+        lineNotifyMessage(token3, message)
+    if num > 0:
+        message = ((('Inverter發電量為零案場' + str(num) + '場' + '\n'), sorted(ZeroPower)))
+        lineNotifyMessage(token3, message)
 
 # 自檢4
 StartTime = '10:00:00'
 EndTime = '10:00:00'
 InverterError = []
 k = 0
-#print(Today)
 data4 = []
 sitecode4 = []
 
@@ -141,7 +153,6 @@ with open(r'C:\FS100.txt', 'r') as f:
         message = "Inverter皆無ErrorCode"
         lineNotifyMessage(token4, message)
     if num4 > 0:
-        #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
         message = ((('Inverter有ErrorCode案場'+str(num4)+'場'+'\n'), sorted(InverterError)))
         lineNotifyMessage(token4, message)
 
@@ -181,7 +192,6 @@ with open(r'C:\FS100.txt', 'r') as f:
         message = "Count<285 or Count>300_全案場正常"
         lineNotifyMessage(token5, message)
     if num5 > 0:
-        #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
         message = ((('Count<285 or Count>300案場'+str(num5)+'場'+'\n'), sorted(Count300)))
         lineNotifyMessage(token5, message)
 
@@ -215,13 +225,12 @@ with open(r'C:\FS100.txt', 'r') as f:
             for q in range(len(FS1006)):
                 if (FS1006[q][0]) == (data6):
                     Inverter10000.append(FS1006[q][1]+'_'+data6 + '_' + Invcode + '\n')
-    num = len(Inverter10000)
+    num6 = len(Inverter10000)
     print(Inverter10000)
-    if num <= 0:
+    if num6 <= 0:
         message = "Inveter發電量未有超過十萬案場"
         lineNotifyMessage(token6, message)
-    if num > 0:
-        #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
+    if num6 > 0:
         message = ((('Inveter發電量超過十萬案場'+str(num)+'場'+'\n'), sorted(Inverter10000)))
         lineNotifyMessage(token6, message)
 # 自檢7
@@ -234,15 +243,15 @@ k = 0
 #print(Today)
 
 
-sitecode = []
+sitecode7 = []
 
 with open(r'C:\FS100.txt', 'r') as f:
     for i in range(0,100):
-        sitecode.append(f.readline().replace('\n', ''))
-        sql11 = "%s%s.%s '%s'%s'%s'%s'%s'%s" % ('SELECT count(DAQ_Date) FROM FSLG_', sitecode[i], 'T2_inv where invid = 1 and DAQ_Date = (SELECT DATE_FORMAT(subdate(CURDATE(), 1),', '%Y/%m/%d', ')) and DAQ_Time >= ', StartTime, ' AND DAQ_Time < ', EndTime, ' GROUP BY daq_date')
+        sitecode7.append(f.readline().replace('\n', ''))
+        sql11 = "%s%s.%s '%s'%s'%s'%s'%s'%s" % ('SELECT count(DAQ_Date) FROM FSLG_', sitecode7[i], 'T2_inv where invid = 1 and DAQ_Date = (SELECT DATE_FORMAT(subdate(CURDATE(), 1),', '%Y/%m/%d', ')) and DAQ_Time >= ', StartTime, ' AND DAQ_Time < ', EndTime, ' GROUP BY daq_date')
         print(sql11)
         sql12 = "SELECT Site_code, Extel_code FROM FS_Logger_Global.Site_list"
-        print(sql1)
+        print(sql12)
         cursor10 = mydb.cursor()
         cursor10.execute(sql11)
         Count145 = cursor10.fetchall()
@@ -253,23 +262,22 @@ with open(r'C:\FS100.txt', 'r') as f:
             pass
 
         elif Count145[0][0] < 140:
-            data7, count = sitecode[i], Count145[0][0]
+            data7, count = sitecode7[i], Count145[0][0]
             for q in range(len(FS1007)):
                 if (FS1007[q][0]) == (data7):
                     Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count) + '\n')
         elif Count145[0][0] > 145:
-            data7, count = sitecode[i], Count145[0][0]
+            data7, count = sitecode7[i], Count145[0][0]
             for q in range(len(FS1007)):
                 if (FS1007[q][0]) == (data7):
                     Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count) + '\n')
         else:
             pass
-    num = len(Count140)
+    num7 = len(Count140)
     print(Count140)
-    if num <= 0:
+    if num7 <= 0:
         message = "145>Count<140_全案場正常"
         lineNotifyMessage(token7, message)
-    if num > 0:
-        #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
+    if num7 > 0:
         message = ((('145>Count<140案場'+str(num)+'場'+'\n'), sorted(Count140)))
         lineNotifyMessage(token7, message)
