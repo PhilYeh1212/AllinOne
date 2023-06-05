@@ -9,6 +9,7 @@ token3 = 'G3OSherla7611j3a9oop72QXwgxcQGwlVneFdlLytgC'
 token4 = '6gEE5rpI3O5dr3KzHL0e9MHNJzQcKkqlR9mcLNfVnFn'
 token5 = 'whW7Rz136t5OvtOViCxTlSRVf2YAbC7CQxDUpTv8ulm'
 token6 = 'aZl13q5eZsBGjzcK4LQNagbu9FkoT0HD1lvWhY3tiRt'
+token7 = 'mVs0wefeiCWchw4LlOi9jBy1vDHlACpntMvWy5bTu4G'
 
 def lineNotifyMessage(token, msg):
     headers = {
@@ -79,6 +80,7 @@ cursor4 = mydb.cursor()
 cursor4.execute(sql4)
 offgrid = cursor4.fetchall()
 offgridLostdata = []
+offgridFulldata = []
 offgriddata = offgrid[53:73]
 offgriddata1 = offgrid[132:138]
 
@@ -86,19 +88,29 @@ for i in offgriddata:
     ID, date, DAS, Count, Insertdate = i
     if (int(Count) < 360):
         offgridLostdata.append(DAS)
+    elif (int(Count) > 800):
+        offgridFulldata.append(DAS)
 for j in offgriddata1:
     ID, date, DAS, Count, Insertdate = j
     if (int(Count) < 360):
         offgridLostdata.append(DAS)
+    elif (int(Count) > 800):
+        offgridFulldata.append(DAS)
+
 num2 = len(offgridLostdata)
-print(num2)
-print(offgridLostdata)
+num6 = len(offgridFulldata)
 if num2 <= 0:
     message = "OK"
     lineNotifyMessage(token6, message)
 if num2 > 0:
     message = ('缺資料機台共'+str(num2)+'台\n'), offgridLostdata
     lineNotifyMessage(token6, message)
+if num6 <= 0:
+    message = "OK"
+    lineNotifyMessage(token7, message)
+if num6 > 0:
+    message = ('資料重複上傳機台共'+str(num6)+'台\n'), offgridFulldata
+    lineNotifyMessage(token7, message)
 
 
 CloseErr = []

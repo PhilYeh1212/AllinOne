@@ -23,7 +23,7 @@ def lineNotifyMessage(token, msg):
 Notupload = []
 mydb = mysql.connector.connect(host="35.221.247.182", user="root", password="Oerlikon;1234", port=3306, database="FS_Logger_Global")
 Today = time.strftime('%Y/%m/%d', time.localtime())
-sql1 = "%s'%s'" % ('SELECT Extel_code FROM FS_Logger_Global.Site_list where DAQ_DAte != ', Today)
+sql1 = "%s'%s'" % ('SELECT Extel_code FROM FS_Logger_Global.Site_list where DAQ_Date != ', Today)
 cursor1 = mydb.cursor()
 cursor1.execute(sql1)
 Online = cursor1.fetchall()
@@ -80,8 +80,8 @@ with open(r'C:\FS100.txt', 'r') as f:
         message = ((('夜間Inverter有讀值案場'+str(num2)+'場'), sorted(NightPowerError)))
         lineNotifyMessage(token2, message)
 
-# 自檢3
-StartTime = '10:00:00'
+#自檢3
+StartTime = '09:55:00'
 EndTime = '10:00:00'
 k = 0
 Zero = []
@@ -103,12 +103,12 @@ with open(r'C:\FS100.txt', 'r') as f:
         if not ZeroOnline:
             pass
         else:
-            data, Invcode = sitecode8[i], ZeroOnline
-            Invcode = ' '.join(str(i) for i in Invcode)
-            Invcode = Invcode.replace('(', '').replace(',', '').replace(')', '')
+            data, Invcode1 = sitecode8[i], ZeroOnline
+            Invcode1 = ' '.join(str(i) for i in Invcode1)
+            Invcode1 = Invcode1.replace('(', '').replace(',', '').replace(')', '')
             for q in range(len(FS100)):
                 if (FS100[q][0]) == (data):
-                    ZeroPower.append(FS100[q][1]+'_'+data + '_' + Invcode + '\n')
+                    ZeroPower.append(FS100[q][1]+'_'+data + '_' + Invcode1 + '\n')
     num = len(ZeroPower)
     print(ZeroPower)
     if num <= 0:
@@ -119,7 +119,7 @@ with open(r'C:\FS100.txt', 'r') as f:
         lineNotifyMessage(token3, message)
 
 # 自檢4
-StartTime = '10:00:00'
+StartTime = '09:55:00'
 EndTime = '10:00:00'
 InverterError = []
 k = 0
@@ -141,12 +141,12 @@ with open(r'C:\FS100.txt', 'r') as f:
         if not InverterErrorCode:
             pass
         else:
-            data4, Invcode = sitecode4[i], InverterErrorCode
-            Invcode = ' '.join(str(i) for i in Invcode)
-            Invcode = Invcode.replace(' ', '').replace('.0', '')
+            data4, Invcode2 = sitecode4[i], InverterErrorCode
+            Invcode2 = ' '.join(str(i) for i in Invcode2)
+            Invcode2 = Invcode2.replace(' ', '').replace('.0', '')
             for q in range(len(FS1004)):
                 if (FS1004[q][0]) == (data4):
-                    InverterError.append(FS1004[q][1]+'_'+data4+'_'+FS1004[q][2]+Invcode + '\n')
+                    InverterError.append(FS1004[q][1]+'_'+data4+'_'+FS1004[q][2]+Invcode2 + '\n')
     num4 = len(InverterError)
     print(InverterError)
     if num4 <= 0:
@@ -180,10 +180,10 @@ with open(r'C:\FS100.txt', 'r') as f:
         if not Count285:
             pass
         elif Count285[0][0] < 285 or Count285[0][0] > 300:
-            data5, count = sitecode5[i], Count285[0][0]
+            data5, count1 = sitecode5[i], Count285[0][0]
             for q in range(len(FS1005)):
                 if (FS1005[q][0]) == (data5):
-                    Count300.append(FS1005[q][1]+'_'+data5 + '_' + str(count) + '\n')
+                    Count300.append(FS1005[q][1]+'_'+data5 + '_' + str(count1) + '\n')
         else:
             pass
     num5 = len(Count300)
@@ -219,19 +219,19 @@ with open(r'C:\FS100.txt', 'r') as f:
         if not Inverterover:
             pass
         else:
-            data6, Invcode = sitecode6[i], Inverterover
-            Invcode = ' '.join(str(i) for i in Invcode)
-            Invcode = Invcode.replace('(', '').replace(',', '').replace(')', '')
+            data6, Invcode3 = sitecode6[i], Inverterover
+            Invcode3 = ' '.join(str(i) for i in Invcode3)
+            Invcode3 = Invcode3.replace('(', '').replace(',', '').replace(')', '')
             for q in range(len(FS1006)):
                 if (FS1006[q][0]) == (data6):
-                    Inverter10000.append(FS1006[q][1]+'_'+data6 + '_' + Invcode + '\n')
+                    Inverter10000.append(FS1006[q][1]+'_'+data6 + '_' + Invcode3 + '\n')
     num6 = len(Inverter10000)
     print(Inverter10000)
     if num6 <= 0:
         message = "Inveter發電量未有超過十萬案場"
         lineNotifyMessage(token6, message)
     if num6 > 0:
-        message = ((('Inveter發電量超過十萬案場'+str(num)+'場'+'\n'), sorted(Inverter10000)))
+        message = ((('Inveter發電量超過十萬案場'+str(num6)+'場'+'\n'), sorted(Inverter10000)))
         lineNotifyMessage(token6, message)
 # 自檢7
 data7 = []
@@ -260,17 +260,16 @@ with open(r'C:\FS100.txt', 'r') as f:
         FS1007 = cursor11.fetchall()
         if not Count145:
             pass
-
         elif Count145[0][0] < 140:
-            data7, count = sitecode7[i], Count145[0][0]
+            data7, count2 = sitecode7[i], Count145[0][0]
             for q in range(len(FS1007)):
                 if (FS1007[q][0]) == (data7):
-                    Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count) + '\n')
+                    Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count2) + '\n')
         elif Count145[0][0] > 145:
             data7, count = sitecode7[i], Count145[0][0]
             for q in range(len(FS1007)):
                 if (FS1007[q][0]) == (data7):
-                    Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count) + '\n')
+                    Count140.append(FS1007[q][1]+'_'+data7 + '_' + str(count2) + '\n')
         else:
             pass
     num7 = len(Count140)
@@ -279,5 +278,5 @@ with open(r'C:\FS100.txt', 'r') as f:
         message = "145>Count<140_全案場正常"
         lineNotifyMessage(token7, message)
     if num7 > 0:
-        message = ((('145>Count<140案場'+str(num)+'場'+'\n'), sorted(Count140)))
+        message = ((('145>Count<140案場'+str(num7)+'場'+'\n'), sorted(Count140)))
         lineNotifyMessage(token7, message)
