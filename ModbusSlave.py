@@ -19,7 +19,6 @@ def calc_crc(string):
     return hex(((crc & 0xff) << 8) + (crc >> 8))
 
 mydb = mysql.connector.connect(host="localhost", user="root", password="Oerlikon;1234", port=3306, database="vena_dds_global")
-
 offsetini = open(r'C:\DDS Data\offset.ini', 'r')
 Line1 = offsetini.readlines()
 dasID = Line1[9].split(':')
@@ -33,7 +32,7 @@ data = cursor.fetchall()
 soiling = '%02d' % (math.floor(data[0][1] * 100))
 
 serCOM2 = serial.Serial()
-serCOM2.port = "COM5"
+serCOM2.port = "COM2"
 serCOM2.baudrate = 9600
 serCOM2.bytesize = serial.EIGHTBITS
 serCOM2.parity = serial.PARITY_NONE
@@ -60,3 +59,4 @@ while True:
                     crcsend = calc_crc(bufdata)
                     SendData = bytes.fromhex(bufdata + crcsend[2:6])
                     serCOM2.write(SendData)
+                    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), SendData)

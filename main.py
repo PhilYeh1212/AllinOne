@@ -1,160 +1,149 @@
 import csv
 import time
-import struct
-import socket
-from threading import Thread
-from abc import ABC, abstractmethod
+import requests
+import pandas as pd
+from datetime import datetime
+import numpy as np
+import shioaji as sj
+from collections import defaultdict, deque
+from shioaji import TickFOPv1, Exchange
+from threading import Event
+
+minute_close = pd.Series()
+stock = 0
+token = '4cwTgoUM0Npnnob1D0aUHCYWxN6huiqVF9poI0G1Efe'
+
+def lineNotifyMessage(token, msg):
+    headers = {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    payload = {'message': msg}
+    r = requests.post("https://notify-api.line.me/api/notify", headers=headers, params=payload)
+    return r.status_code
 
 today = time.strftime('%y_%m_%d', time.localtime())
+pathtoday = str(r'C:\_Phil\Private\stockprice\Price_Log' + today + '.csv')
+# with open(pathtoday, 'a+', newline='') as csvfile:
+#     writer = csv.writer(csvfile)
+#     writer.writerow(['Time', 'open', 'underlying', 'bid_side_total_vol',
+#                      'ask_side_total_vol', 'avg_price', 'close', 'high',
+#                      'low', 'amount', 'total_amount', 'volume', 'total_volume',
+#                      'tick_type', 'chg_type', 'price_chg', 'pct_chg', 'simtrade'])
+api = sj.Shioaji(simulation=True) # 模擬模式
+api.login(api_key="H6WLFjAN6QaRKucnGBm9TgEGpghBNNhafRyj3xjMLp7M",
+          secret_key="HRgYZfKx7fz2BFYgxxcdxWvtXpCMYPj6BgsqySArEdmF",
+          fetch_contract=False)
 
-pathtoday = str('ModbusTCP_log_' + today + '.csv')
-#print(file)
-file = str(today + '_buffer for 10.csv')
-path = r"C:\_Phil\02_Project\_ChenyaPVQA\data\23_05_27_buffer for 10.csv"
-#path = r'C:\_Phil\DDS Data\21_12_22_buffer for 10'
-#print(path)
-DevID = '01'
-FUNC = '03'
-datalens = '3c'
+api.fetch_contracts(contract_download=True)
+# subscribe
+api.quote.subscribe(
+    api.Contracts.Futures.MXF['MXF202307'],
+    quote_type = sj.constant.QuoteType.Tick,
+    version = sj.constant.QuoteVersion.v1
+)
+# set context
+msg_queue = defaultdict(deque)
+api.set_context(msg_queue)
+# In order to use context, set bind=True
+@api.on_tick_fop_v1(bind=True)
+def quote_callback(self, exchange:Exchange, tick: TickFOPv1):
+    #print(tick)
+    price = tick.amount
+    volume = tick.volume
+    price_chg = tick.price_chg
+    print(Exchange, price, volume, price_chg)
 
-# 觀察者接口
-class Observer(ABC):
-    @abstractmethod
-    def update(self, data):
-        pass
 
-# 具體的觀察者 - 控制台打印觀察者
-class ConsolePrintObserver(Observer):
-    def update(self, data):
-        print("Received data:", data)
+def RSI(close, period=12):
+    # 整理資料
+    Close = close[-13:]
+    Chg = Close - Close.shift(1)
+    Chg_pos = pd.Series(index=Chg.index, data=Chg[Chg > 0])
+    Chg_pos = Chg_pos.fillna(0)
+    Chg_neg = pd.Series(index=Chg.index, data=-Chg[Chg < 0])
+    Chg_neg = Chg_neg.fillna(0)
 
-# 主題類別
-class Subject:
-    def __init__(self):
-        self.observers = []
+    # 計算平均漲跌幅度
+    up_mean = np.mean(Chg_pos.values[-12:])
+    down_mean = np.mean(Chg_neg.values[-12:])
 
-    def attach(self, observer):
-        self.observers.append(observer)
+    # 計算 RSI
+    if (up_mean + down_mean > 0):
+        rsi = 100 * up_mean / (up_mean + down_mean)
+    else:
+        rsi = -1
 
-    def detach(self, observer):
-        self.observers.remove(observer)
+    return rsi
 
-    def notify(self, data):
-        for observer in self.observers:
-            observer.update(data)
 
-# Modbus TCP Slave 單例類別
-class ModbusTCPSlave:
-    __instance = None
+Event().wait()
+contracts = [api.Contracts.Futures['MXF202307']]
 
-    @staticmethod
-    def getInstance():
-        if ModbusTCPSlave.__instance is None:
-            ModbusTCPSlave()
-        return ModbusTCPSlave.__instance
+for i in range(0, 12):
+    snapshots = api.snapshots(contracts)
+    minute_close = minute_close.append(pd.Series(
+        [snapshots[0].close],
+        index=[pd.to_datetime(snapshots[0].ts, unit='ns')]
+    ))
+    time.sleep(60)
 
-    def __init__(self):
-        if ModbusTCPSlave.__instance is not None:
-            raise Exception("This class is a singleton!")
-        else:
-            ModbusTCPSlave.__instance = self
-            self.subject = Subject()
-            self.observers = []
+# 開始算RSI
+for i in range(0, 700):
+    # 抓snapshot
+    snapshots = api.snapshots(contracts)
 
-    def attach(self, observer):
-        self.observers.append(observer)
+    # 存到分k收盤價的series
+    minute_close = minute_close.append(pd.Series(
+        [snapshots[0].close],
+        index=[pd.to_datetime(snapshots[0].ts, unit='ns')]
+    ))
 
-    def detach(self, observer):
-        self.observers.remove(observer)
+    # 計算rsi
+    rsi = RSI(minute_close)
 
-    def notify(self, data):
-        for observer in self.observers:
-            observer.update(data)
+    # 觸發訊號判斷
+    if rsi <= 30 and rsi >= 0 and stock == 0:
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time, "BUY AT ", snapshots[0].close)
+        message = '%s%s%s%s'% ("Current Time =", current_time, "BUY AT ", snapshots[0].close)
+        lineNotifyMessage(token, message)
+        stock += 1
+    if rsi >= 70 and stock == 1:
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time, "SELL AT ", snapshots[0].close)
+        message = '%s%s%s%s' % ("Current Time =", current_time, "SELL AT ", snapshots[0].close)
+        lineNotifyMessage(token, message)
+        stock -= 1
+    time.sleep(60)
 
-    def start(self, host, port):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-            server_socket.bind((host, port))
-            server_socket.listen(5)
-            print("Modbus TCP Slave is listening on {}:{}".format(host, port))
-
-            while True:
-                client_socket, client_address = server_socket.accept()
-                print("New connection from:", client_address)
-                thread = Thread(target=self.handle_client, args=(client_socket,))
-                thread.start()
-
-    def handle_client(self, client_socket):
-        while True:
-            irr1 = []
-            irr2 = []
-            irr3 = []
-            Tamb = []
-            Tmod = []
-            WindS = []
-            WindD = []
-            Hum = []
-            Rain = []
-            data = client_socket.recv(1024)
-            if not data:
-                print('broken')
-                break
-            seq = data[0:2].hex()
-            # print(seq)
-            ID = data[6:7].hex()
-            func = data[7:8].hex()
-            LENS = data[11:12].hex()
-            if ID == DevID:
-                if func == FUNC:
-                    if LENS == datalens:
-                        with open(path, newline='') as csvfile:
-                            rows = csv.reader(csvfile, delimiter='\t')
-                            for row in rows:
-                                irr1.append(float(row[10]))
-                                irr2.append(float(row[11]))
-                                irr3.append(float(row[12]))
-                                Tamb.append(float(row[27]))
-                                Tmod.append(float(row[20]))
-                                WindS.append(float(row[22]))
-                                WindD.append(float(row[23]))
-                                Rain.append(float(row[21]))
-                                Hum.append(float(row[28]))
-                            csvlen = len(irr1) - 1
-                            IRR1 = struct.pack('>f', irr1[csvlen])
-                            IRR2 = struct.pack('>f', irr2[csvlen])
-                            IRR3 = struct.pack('>f', irr3[csvlen])
-                            TAMB = struct.pack('>f', Tamb[csvlen])
-                            TMOD = struct.pack('>f', Tmod[csvlen])
-                            WINS = struct.pack('>f', WindS[csvlen])
-                            WIND = struct.pack('>f', WindD[csvlen])
-                            RAINsen = struct.pack('>f', Rain[csvlen])
-                            Humsen = struct.pack('>f', Hum[csvlen])
-                        respond = ((bytes.fromhex('%s%s%s%s' % (seq, '00000081', DevID,
-                                                                '0378')) + IRR1 + IRR2 + IRR3 + TAMB + TMOD + WINS + WIND + RAINsen + Humsen + IRR1 + IRR2 + IRR3 + TAMB + TMOD + WINS + WIND + RAINsen + Humsen + IRR1 + IRR2 + IRR1 + IRR2 + IRR3 + TAMB + TMOD + WINS + WIND + RAINsen + Humsen + IRR1))
-                        # WattClean,VoltageClean,CurrentClean,kWhClean,WattDust,VoltageDust,CurrentDust,kWhDust,Irr,T_amb,T_Dust,T_Clean,Watertanklevel,Windspeed,Winddirection,VoltagePump,CurrentPump,Rainfall,Soiling,Efffect,T_Tank
-
-                        client_socket.sendall(respond)
-                        # with open(pathtoday, 'a+', newline='') as csvfile:
-                        #     writer = csv.writer(csvfile)
-                        #     data = data.hex()
-                        #     time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-                        #     writer.writerow(
-                        #         [time1, data, irr1[csvlen], irr2[csvlen], irr3[csvlen], Tamb[csvlen],
-                        #          Tmod[csvlen], WindS[csvlen], WindD[csvlen], Rain[csvlen], Hum[csvlen]])
-                        print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), 'Senddata OK')
-                        del irr1[:]
-                        del irr2[:]
-                        del irr3[:]
-                        del Tamb[:]
-                        del Tmod[:]
-                        del WindS[:]
-                        del WindD[:]
-                        del Hum[:]
-                        del Rain[:]
-
-        client_socket.close()
-
-# 使用示例
-modbus_slave = ModbusTCPSlave.getInstance()
-console_observer = ConsolePrintObserver()
-modbus_slave.attach(console_observer)
-modbus_slave.start("192.168.4.50", 502)
+# time.sleep(5)
+# while True:
+#     pass
+    # datetime = tick.datetime
+    # Popen = tick.open
+    # underlying_price = tick.underlying_price
+    # bid_side_total_vol = tick.bid_side_total_vol
+    # ask_side_total_vol = tick.ask_side_total_vol
+    # avg_price = tick.avg_price
+    # close = tick.close
+    # high = tick.high
+    # low = tick.low
+    # amount = tick.amount
+    # total_amount = tick.total_amount
+    # volume = tick.volume
+    # total_volume = tick.total_volume
+    # tick_type = tick.tick_type
+    # chg_type = tick.chg_type
+    # price_chg = tick.price_chg
+    # pct_chg = tick.pct_chg
+    # simtrade = tick.simtrade
+    # print(amount)
+    # with open(pathtoday, 'a+', newline='') as csvfile:
+    #     writer = csv.writer(csvfile)
+    #     writer.writerow(datetime, Popen, underlying_price, bid_side_total_vol,
+    #                     ask_side_total_vol, avg_price, close, high,
+    #                     low, amount, total_amount, volume, total_volume,
+    #                     tick_type, chg_type, price_chg, pct_chg, simtrade)
