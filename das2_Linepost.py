@@ -227,7 +227,7 @@ today = time.strftime('%Y/%m')
 date = int(time.strftime('%d')) - 1
 yesterday = "'%s/%02d'" % (today, date)
 i = 0
-while i < 150:
+while i < 300:
     try:
         #datetime = "FROM DAS2_Irr_S where Date='2022/09/01'"
         datetime = ("%s%s" % ("FROM DAS2_Irr_S where Date=", yesterday))

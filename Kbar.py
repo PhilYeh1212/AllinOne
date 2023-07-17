@@ -29,7 +29,7 @@ def quote_callback(self, exchange:Exchange, tick: TickFOPv1):
 api.fetch_contracts(contract_download=True)
 # subscribe
 api.quote.subscribe(
-    api.Contracts.Futures.MXF['MXF202306'],
+    api.Contracts.Futures.MXF['MXF202307'],
     quote_type = sj.constant.QuoteType.Tick,
     version = sj.constant.QuoteVersion.v1
 )

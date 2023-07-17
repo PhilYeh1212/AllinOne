@@ -30,6 +30,7 @@ cursor = mydb.cursor()
 cursor.execute(SQL)
 data = cursor.fetchall()
 soiling = '%02d' % (math.floor(data[0][1] * 100))
+print(soiling)
 
 serCOM2 = serial.Serial()
 serCOM2.port = "COM2"
@@ -51,12 +52,12 @@ while True:
     CommData = Command[0:6]
     inCrc = Command[6:10]
     crc = calc_crc(CommData.hex())
+    print('CMD = ', Command)
     if Command[0:1].hex() == DeviceID:
         if Command[1:2].hex() == fun:
-            if Command[3:4].hex() == '01':
-                if crc[2:6] == inCrc.hex():
-                    bufdata = '%s%s' % ('41030200', soiling)
-                    crcsend = calc_crc(bufdata)
-                    SendData = bytes.fromhex(bufdata + crcsend[2:6])
-                    serCOM2.write(SendData)
-                    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), SendData)
+            if crc[2:6] == inCrc.hex():
+                bufdata = '%s%s' % ('41030200', soiling)
+                crcsend = calc_crc(bufdata)
+                SendData = bytes.fromhex(bufdata + crcsend[2:6])
+                serCOM2.write(SendData)
+                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), SendData)
