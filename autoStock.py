@@ -246,9 +246,8 @@ while True:
                 diff = Sellpoint - Buypoint
                 earn = diff * 50
                 print(diff)
-                with open(pathtoday, 'a+', newline='') as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerow([current_time, Buypoint, Sellpoint, diff, earn])
+
+
                 Sellstock -= 1
                 buyDs = 0
                 buyUs = 0

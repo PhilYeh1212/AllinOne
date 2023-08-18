@@ -9,7 +9,8 @@ token3 = 'G3OSherla7611j3a9oop72QXwgxcQGwlVneFdlLytgC'
 token4 = '6gEE5rpI3O5dr3KzHL0e9MHNJzQcKkqlR9mcLNfVnFn'
 token5 = 'whW7Rz136t5OvtOViCxTlSRVf2YAbC7CQxDUpTv8ulm'
 token6 = 'aZl13q5eZsBGjzcK4LQNagbu9FkoT0HD1lvWhY3tiRt'
-token7 = 'mVs0wefeiCWchw4LlOi9jBy1vDHlACpntMvWy5bTu4G'
+token7 = 'Qun8UfoKnI9jPD1R4GsHYv13ku0R1BfgbZQLqzKR677'
+token8 = 'HqCINpOMHwOTuaT4CCLzGKwavLIY46wOYxPPdB68dfD'
 
 def lineNotifyMessage(token, msg):
     headers = {
@@ -27,7 +28,8 @@ FTP= []
 Lostdata = []
 mydb = mysql.connector.connect(host="35.236.181.75", user="Phil", password="Qwe751212", port=3306,
                                database="vena_dds_global")
-#sql = "SELECT * FROM DataCount ORDER BY Date DESC, COUNT DESC"
+
+sql = "SELECT * FROM DataCount ORDER BY Date DESC, COUNT DESC"
 sql1 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and Off_grid = 'F' and FTPupload ='F'"
 sql2 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
 sql3 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and FTPupload = 'T'"
@@ -74,44 +76,38 @@ if num1 > 0:
     lineNotifyMessage(token1, message)
 
 
-
+offgrid = []
+offgridLostdata = []
 sql4 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
 cursor4 = mydb.cursor()
 cursor4.execute(sql4)
 offgrid = cursor4.fetchall()
-offgridLostdata = []
-offgridFulldata = []
+num2 = len(offgrid)
 offgriddata = offgrid[53:73]
 offgriddata1 = offgrid[132:138]
+offgriddata2 = offgrid[146:153]
 
 for i in offgriddata:
     ID, date, DAS, Count, Insertdate = i
     if (int(Count) < 360):
         offgridLostdata.append(DAS)
-    elif (int(Count) > 800):
-        offgridFulldata.append(DAS)
 for j in offgriddata1:
     ID, date, DAS, Count, Insertdate = j
     if (int(Count) < 360):
         offgridLostdata.append(DAS)
-    elif (int(Count) > 800):
-        offgridFulldata.append(DAS)
+for k in offgriddata2:
+    ID, date, DAS, Count, Insertdate = k
+    if (int(Count) < 360):
+        offgridLostdata.append(DAS)
 
 num2 = len(offgridLostdata)
-num6 = len(offgridFulldata)
 if num2 <= 0:
     message = "OK"
     lineNotifyMessage(token6, message)
 if num2 > 0:
     message = ('缺資料機台共'+str(num2)+'台\n'), offgridLostdata
     lineNotifyMessage(token6, message)
-if num6 <= 0:
-    message = "OK"
-    lineNotifyMessage(token7, message)
-if num6 > 0:
-    message = ('資料重複上傳機台共'+str(num6)+'台\n'), offgridFulldata
-    lineNotifyMessage(token7, message)
-
+#
 
 CloseErr = []
 Closedata = []
@@ -257,3 +253,39 @@ if num6 >= 1:
         datastr = datastr + str(y[0]) + ',' + str(y[1]) + '\n'
     message = (('負Soiling機台共' + str(num6) + '台\n'), datastr)
     lineNotifyMessage(token4, message)
+
+SevenDays8 = []
+SevenDays0 = []
+sql41 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
+cursor41 = mydb.cursor()
+cursor41.execute(sql41)
+ESH = cursor41.fetchall()
+for i in range(len(ESH)):
+    sql4 = '%s%s%s' % ("SELECT ESH_Correct FROM ", str(ESH[i][0]), '.ESH_Correct Where date_sub(curdate(), interval 7 '
+                                                                   'day)<=date')
+    cursor4 = mydb.cursor()
+    cursor4.execute(sql4)
+    ESHC = cursor4.fetchall()
+    try:
+        for j in range(7):
+            if ESHC[j][0] >= 8:
+                SevenDays8.append(ESH[i][0])
+            if ESHC[j][0] <= 0:
+                SevenDays0.append(ESH[i][0])
+    except Exception as e:
+        print(e)
+num7 = len(set(SevenDays8))
+num8 = len(set(SevenDays0))
+if num7 <= 0:
+    message = "OK"
+    lineNotifyMessage(token7, message)
+if num7 > 0:
+    message = ('共'+str(num7)+'台\n'), set(SevenDays8)
+    lineNotifyMessage(token7, message)
+
+if num8 <= 0:
+    message = "OK"
+    lineNotifyMessage(token8, message)
+if num8 > 0:
+    message = ('共'+str(num8)+'台\n'), set(SevenDays0)
+    lineNotifyMessage(token8, message)

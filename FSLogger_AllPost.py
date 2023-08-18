@@ -81,8 +81,8 @@ with open(r'C:\FS100.txt', 'r') as f:
         lineNotifyMessage(token2, message)
 
 #自檢3
-StartTime = '09:55:00'
-EndTime = '10:00:00'
+StartTime = '10:00:00'
+EndTime = '10:03:00'
 k = 0
 Zero = []
 ZeroPower = []
@@ -280,3 +280,4 @@ with open(r'C:\FS100.txt', 'r') as f:
     if num7 > 0:
         message = ((('145>Count<140案場'+str(num7)+'場'+'\n'), sorted(Count140)))
         lineNotifyMessage(token7, message)
+

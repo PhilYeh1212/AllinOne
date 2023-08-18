@@ -1,7 +1,7 @@
 import json
 import requests
 
-url = "http://34.80.19.148:8001/Soiling前鋒子"  # 要請求的URL
+url = "http://34.80.19.148:8001/Soiling_前鋒子"  # 要請求的URL
 
 # 發送HTTP GET請求
 response = requests.get(url)
