@@ -140,16 +140,16 @@ while True:
                                             + Spare + Spare + Spare + Spare + Spare))
 
                                 conn.sendall(respond)
-                                with open(pathtoday, 'a+', newline='') as csvfile:
-                                    writer = csv.writer(csvfile)
-                                    data = data.hex()
-                                    time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-                                    writer.writerow(
-                                        [time1, data, WattPV1[csvlen], VolPV1[csvlen], CurPV1[csvlen], kwhPV1[csvlen],
-                                         WattPV2[csvlen], VolPV2[csvlen], CurPV2[csvlen], kwhPV2[csvlen],
-                                         VolPump[csvlen], TClean[csvlen], TDust[csvlen], TEnv[csvlen],
-                                         TTank[csvlen], Rain[csvlen], Soiling[csvlen], Spare, Spare, Spare
-                                         , Spare, Spare, Spare, Spare, Spare, Spare, Spare])
+                                # with open(pathtoday, 'a+', newline='') as csvfile:
+                                #     writer = csv.writer(csvfile)
+                                #     data = data.hex()
+                                #     time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                                #     writer.writerow(
+                                #         [time1, data, WattPV1[csvlen], VolPV1[csvlen], CurPV1[csvlen], kwhPV1[csvlen],
+                                #          WattPV2[csvlen], VolPV2[csvlen], CurPV2[csvlen], kwhPV2[csvlen],
+                                #          VolPump[csvlen], TClean[csvlen], TDust[csvlen], TEnv[csvlen],
+                                #          TTank[csvlen], Rain[csvlen], Soiling[csvlen], Spare, Spare, Spare
+                                #          , Spare, Spare, Spare, Spare, Spare, Spare, Spare])
                                 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), 'Send-data OK')
                                 del WattPV1[:]
                                 del VolPV1[:]

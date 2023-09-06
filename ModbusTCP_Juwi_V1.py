@@ -8,7 +8,7 @@ today = time.strftime('%y_%m_%d', time.localtime())
 
 pathtoday = str('ModbusTCP_log_' + today + '.csv')
 # print(file)
-file = str(today + '.csv')
+file = str(today + '_buffer for 10.csv')
 path = '%s\%s' % (r"C:\DDS Data", file)
 # print(path)
 DevID = '01'
@@ -23,13 +23,13 @@ while True:
             writer = csv.writer(csvfile)
             time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             writer.writerow(['Time', 'RevCMD', 'WattPV1', 'VolPV1', 'CurPV1', 'kwhPV1', 'WattPV2', 'VolPV2', 'CurPV2',
-                             'kwhPV2', 'VolPump', 'CurPump', 'Wind', 'Wins',
-                             'Irr', 'Level', 'TClean', 'TDust', 'TEnv', 'TTank', 'Rain', 'Soiling', 'Spare', 'Spare'
+                             'kwhPV2', 'Irr', 'TEnv', 'TDust', 'TClean', 'Water_Level', 'Wind', 'Wins', 'VolPump',
+                             'CurPump', 'Rain', 'Soiling', 'TTank', 'Spare', 'Spare'
                              , 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare'])
 
     try:
         Module1_TCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Module1_TCP.bind(('172.24.14.161', 502))
+        Module1_TCP.bind(('172.24.14.163', 502))
         Module1_TCP.settimeout(300)
         Module1_TCP.listen(5)
         print('Wait for Command')
@@ -43,7 +43,7 @@ while True:
                     Currentday = time.strftime('%y_%m_%d', time.localtime())
                     if today != Currentday:
                         today = Currentday
-                        pathtoday = '%s_%s%s' % ('ModbusTCP_log_', today, '.csv')
+                        pathtoday = str('ModbusTCP_log_' + today + '.csv')
                         file = str(today + '_buffer for 10.csv')
                         path = '%s\%s' % (r"C:\DDS Data", file)
                         with open(pathtoday, 'a+', newline='') as csvfile:
@@ -52,8 +52,8 @@ while True:
                             writer.writerow(
                                 ['Time', 'RevCMD', 'WattPV1', 'VolPV1', 'CurPV1', 'kwhPV1', 'WattPV2', 'VolPV2',
                                  'CurPV2',
-                                 'kwhPV2', 'VolPump', 'CurPump', 'Wind', 'Wins',
-                                 'Irr', 'Level', 'TClean', 'TDust', 'TEnv', 'TTank', 'Rain', 'Soiling', 'Spare', 'Spare'
+                                 'kwhPV2', 'Irr', 'TEnv', 'TDust', 'TClean', 'Water_Level', 'Wind', 'Wins', 'VolPump',
+                                 'CurPump', 'Rain', 'Soiling', 'TTank', 'Spare', 'Spare'
                                     , 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare'])
 
                     WattPV1 = []
@@ -77,6 +77,7 @@ while True:
                     Rain = []
                     Soiling = []
                     data = conn.recv(1024)
+                    print(data.hex())
                     if not data:
                         print('broken')
                         break
@@ -98,18 +99,18 @@ while True:
                                         VolPV2.append(float(row[7]))
                                         CurPV2.append(float(row[8]))
                                         kwhPV2.append(float(row[9]))
-                                        VolPump.append(float(row[10]))
-                                        CurPump.append(float(row[11]))
-                                        Wind.append(float(row[12]))
-                                        Wins.append(float(row[13]))
-                                        Irr.append(float(row[14]))
-                                        Level.append(float(row[15]))
-                                        TClean.append(float(row[16]))
-                                        TDust.append(float(row[17]))
-                                        TEnv.append(float(row[18]))
-                                        TTank.append(float(row[19]))
-                                        Rain.append(float(row[20]))
-                                        Soiling.append(float(row[21]))
+                                        VolPump.append(float(row[19]))
+                                        CurPump.append(float(row[20]))
+                                        Wind.append(float(row[18]))
+                                        Wins.append(float(row[17]))
+                                        Irr.append(float(row[10]))
+                                        Level.append(float(row[16]))
+                                        TClean.append(float(row[13]))
+                                        TDust.append(float(row[12]))
+                                        TEnv.append(float(row[11]))
+                                        TTank.append(float(row[22]))
+                                        Rain.append(float(row[21]))
+                                        Soiling.append(float(row[23]))
                                     csvlen = len(Irr) - 1
                                     WPV1 = struct.pack('>f', WattPV1[csvlen])
                                     VPV1 = struct.pack('>f', VolPV1[csvlen])
@@ -133,7 +134,7 @@ while True:
                                     EGap = struct.pack('>f', Soiling[csvlen])
                                     Spare = struct.pack('>f', 0)
 
-                                respond = ((bytes.fromhex('%s%s%s%s' % (seq, '00000081', DevID,
+                                respond = ((bytes.fromhex('%s%s%s%s' % (seq, '0000007b', DevID,
                                                                         '0378')) + WPV1 + VPV1 + CPV1 + kWPV1 + WPV2
                                             + VPV2 + CPV2 + kWPV2 + IRR + TE + TD + TC + WLevel + WS + WD + VPump
                                             + CPump + RainGage + EGap + TT + Spare + Spare + Spare + Spare + Spare
@@ -146,10 +147,11 @@ while True:
                                     time1 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
                                     writer.writerow(
                                         [time1, data, WattPV1[csvlen], VolPV1[csvlen], CurPV1[csvlen], kwhPV1[csvlen],
-                                         WattPV2[csvlen], VolPV2[csvlen], CurPV2[csvlen], kwhPV2[csvlen],
-                                         VolPump[csvlen], TClean[csvlen], TDust[csvlen], TEnv[csvlen],
-                                         TTank[csvlen], Rain[csvlen], Soiling[csvlen], Spare, Spare, Spare
-                                         , Spare, Spare, Spare, Spare, Spare, Spare, Spare])
+                                         WattPV2[csvlen], VolPV2[csvlen], CurPV2[csvlen], kwhPV2[csvlen], Irr[csvlen],
+                                          TEnv[csvlen], TDust[csvlen], TClean[csvlen], Level[csvlen], Wins[csvlen],
+                                         Wind[csvlen],VolPump[csvlen], CurPump[csvlen],
+                                         Rain[csvlen], Soiling[csvlen], TTank[csvlen], 'Spare', 'Spare', 'Spare'
+                                         , 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare', 'Spare'])
                                 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), 'Send-data OK')
                                 del WattPV1[:]
                                 del VolPV1[:]

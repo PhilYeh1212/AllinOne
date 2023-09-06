@@ -119,7 +119,7 @@ with open(r'C:\FS100.txt', 'r') as f:
         lineNotifyMessage(token3, message)
 
 # 自檢4
-StartTime = '09:55:00'
+StartTime = '09:56:00'
 EndTime = '10:00:00'
 InverterError = []
 k = 0
@@ -143,7 +143,8 @@ with open(r'C:\FS100.txt', 'r') as f:
         else:
             data4, Invcode2 = sitecode4[i], InverterErrorCode
             Invcode2 = ' '.join(str(i) for i in Invcode2)
-            Invcode2 = Invcode2.replace(' ', '').replace('.0', '')
+            print(Invcode2)
+            Invcode2 = Invcode2.replace(' ', '').replace('', '')
             for q in range(len(FS1004)):
                 if (FS1004[q][0]) == (data4):
                     InverterError.append(FS1004[q][1]+'_'+data4+'_'+FS1004[q][2]+Invcode2 + '\n')
