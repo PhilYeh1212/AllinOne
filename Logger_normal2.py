@@ -25,21 +25,21 @@ with open(r'D:\FSLogger\FS104.csv', newline='') as csvfile:
     for sitecode in row:
         try:
             DB = '%s%s' %('FSLG_', sitecode[0])
-            mydb = mysql.connector.connect(host="localhost", user="root", password="Oerlikon;1234", port=3306,
+            mydb = mysql.connector.connect(host="35.221.247.182", user="root", password="Oerlikon;1234", port=3306,
                                        database=DB)
             sql1 = "%s%s.%s" % ('SELECT Irr, T_PV, daq_time, daq_date FROM FSLG_', sitecode[0], 'T1_head Order by daq_date desc, daq_time desc Limit 1')
             num = int(sitecode[1])
             #sql2 = "%s%s.%s%s" % ('SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, INVXX01, INVXX02, INVXX03, daq_time, daq_date FROM FSLG_',sitecode[0], 'T2_inv Order by daq_date desc, daq_time >= %s, INVID asc Limit ', str(sitecode[1]))
-            sql2 = """
+            sql2 = '%s %s' %("""
             SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, 
             INVXX01, INVXX02, INVXX03, daq_time, daq_date, INVXX07
              FROM T2_inv
             WHERE
                 daq_date = DATE_FORMAT(NOW(), '%Y/%m/%d')
                 AND daq_time < DATE_FORMAT(NOW(), '%H:%i:00')
-                AND daq_time > DATE_FORMAT(NOW() - INTERVAL 5 MINUTE, '%h:%i:%s')
-            ORDER BY uid DESC, invid asc;
-        """
+                AND daq_time > DATE_FORMAT(NOW() - INTERVAL 10 MINUTE, '%h:%i:%s')
+            ORDER BY keyID asc, invid asc limit
+        """, str(sitecode[1]))
             cursor1 = mydb.cursor()
             cursor1.execute(sql1)
             irrins = cursor1.fetchall()
@@ -60,9 +60,10 @@ with open(r'D:\FSLogger\FS104.csv', newline='') as csvfile:
                 if float(INVdata[j][12]) <= 0:
                     if inverternum <= 9:
                         raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
-                               (sitecode[0]+'01', sitecode[0] + 'M0', inverternum, '0', INVdata[j][15], INVdata[j][14],
-                                '####' + INVdata[j][5], INVdata[j][6], str(kWh), INVdata[j][7],
-                                (INVdata[j][8]+'###'), INVdata[j][16], '#\n')
+                               (
+                               sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '0', INVdata[j][15], INVdata[j][14],
+                               '####' + INVdata[j][5], INVdata[j][6], str(kWh), INVdata[j][7],
+                               (INVdata[j][8] + '###'), INVdata[j][16], '#\n')
                         RAWline = RAWline + raw0
                         raw1 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                (sitecode[0]+'01', sitecode[0] + 'M0', inverternum, '1', INVdata[j][15], INVdata[j][14],

@@ -192,14 +192,6 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\calendar.py',
    'PYMODULE'),
-  ('datetime',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\datetime.py',
-   'PYMODULE'),
-  ('_strptime',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\_strptime.py',
-   'PYMODULE'),
   ('socket',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\socket.py',
@@ -296,10 +288,6 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\email\\errors.py',
    'PYMODULE'),
-  ('csv',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\csv.py',
-   'PYMODULE'),
   ('importlib._bootstrap',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\importlib\\_bootstrap.py',
@@ -323,22 +311,6 @@
   ('ast',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\ast.py',
-   'PYMODULE'),
-  ('stringprep',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\stringprep.py',
-   'PYMODULE'),
-  ('subprocess',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\subprocess.py',
-   'PYMODULE'),
-  ('signal',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\signal.py',
-   'PYMODULE'),
-  ('tracemalloc',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\tracemalloc.py',
    'PYMODULE'),
   ('getpass',
    'C:\\Program '
@@ -380,6 +352,14 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\http\\client.py',
    'PYMODULE'),
+  ('stringprep',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\stringprep.py',
+   'PYMODULE'),
+  ('tracemalloc',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\tracemalloc.py',
+   'PYMODULE'),
   ('_py_abc',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\_py_abc.py',
@@ -399,6 +379,14 @@
   ('uuid',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\uuid.py',
+   'PYMODULE'),
+  ('subprocess',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\subprocess.py',
+   'PYMODULE'),
+  ('signal',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\signal.py',
    'PYMODULE'),
   ('platform',
    'C:\\Program '
@@ -474,6 +462,14 @@
    'PYMODULE'),
   ('mysql.connector.version',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\mysql\\connector\\version.py',
+   'PYMODULE'),
+  ('datetime',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\datetime.py',
+   'PYMODULE'),
+  ('_strptime',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\_strptime.py',
    'PYMODULE'),
   ('requests',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\requests\\__init__.py',
@@ -921,6 +917,10 @@
    'PYMODULE'),
   ('urllib3',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\urllib3\\__init__.py',
+   'PYMODULE'),
+  ('csv',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\lib\\csv.py',
    'PYMODULE')],
  [('python39.dll',
    'C:\\Program '
@@ -954,13 +954,13 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\DLLs\\_socket.pyd',
    'EXTENSION'),
-  ('unicodedata.pyd',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\DLLs\\unicodedata.pyd',
-   'EXTENSION'),
   ('_ssl.pyd',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\DLLs\\_ssl.pyd',
+   'EXTENSION'),
+  ('unicodedata.pyd',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\DLLs\\unicodedata.pyd',
    'EXTENSION'),
   ('_uuid.pyd',
    'C:\\Program '
@@ -1006,21 +1006,30 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\python3.dll',
    'BINARY'),
-  ('MSVCP140.dll', 'C:\\WINDOWS\\system32\\MSVCP140.dll', 'BINARY'),
   ('libssl-1_1-x64.dll',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\libssl-1_1-x64.dll',
+   'BINARY'),
+  ('libcrypto-1_1-x64.dll',
+   'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\libcrypto-1_1-x64.dll',
    'BINARY'),
   ('VCRUNTIME140_1.dll',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.3568.0_x64__qbz5n2kfra8p0\\VCRUNTIME140_1.dll',
    'BINARY'),
-  ('libcrypto-1_1-x64.dll',
-   'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\libcrypto-1_1-x64.dll',
-   'BINARY')],
+  ('MSVCP140.dll', 'C:\\WINDOWS\\system32\\MSVCP140.dll', 'BINARY')],
  [],
  [],
  [('base_library.zip',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\build\\main\\base_library.zip',
+   'DATA'),
+  ('cryptography-40.0.2.dist-info\\LICENSE.PSF',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE.PSF',
+   'DATA'),
+  ('cryptography-40.0.2.dist-info\\top_level.txt',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\top_level.txt',
+   'DATA'),
+  ('cryptography-40.0.2.dist-info\\METADATA',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\METADATA',
    'DATA'),
   ('certifi\\py.typed',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\certifi\\py.typed',
@@ -1028,29 +1037,20 @@
   ('cryptography-40.0.2.dist-info\\WHEEL',
    'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\WHEEL',
    'DATA'),
-  ('cryptography-40.0.2.dist-info\\top_level.txt',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\top_level.txt',
-   'DATA'),
-  ('cryptography-40.0.2.dist-info\\LICENSE.PSF',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE.PSF',
-   'DATA'),
-  ('cryptography-40.0.2.dist-info\\METADATA',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\METADATA',
-   'DATA'),
-  ('cryptography-40.0.2.dist-info\\LICENSE',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE',
+  ('cryptography-40.0.2.dist-info\\LICENSE.APACHE',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE.APACHE',
    'DATA'),
   ('cryptography-40.0.2.dist-info\\RECORD',
    'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\RECORD',
    'DATA'),
-  ('cryptography-40.0.2.dist-info\\LICENSE.APACHE',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE.APACHE',
+  ('cryptography-40.0.2.dist-info\\INSTALLER',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\INSTALLER',
+   'DATA'),
+  ('cryptography-40.0.2.dist-info\\LICENSE',
+   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE',
    'DATA'),
   ('cryptography-40.0.2.dist-info\\LICENSE.BSD',
    'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\LICENSE.BSD',
-   'DATA'),
-  ('cryptography-40.0.2.dist-info\\INSTALLER',
-   'c:\\_phil\\04_python\\github\\allinone\\venv\\lib\\site-packages\\cryptography-40.0.2.dist-info\\INSTALLER',
    'DATA'),
   ('certifi\\cacert.pem',
    'C:\\_Phil\\04_Python\\github\\AllinOne\\venv\\lib\\site-packages\\certifi\\cacert.pem',
