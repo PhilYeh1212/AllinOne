@@ -34,7 +34,7 @@ def calculate_technical_indicators(data):
 
 def implement_strategy(data):
     global position
-    data['Position'] = np.where((data['MACD'] > data['Signal_Line']) & (data['J'] > 0) & (position == 0) & (data['Close'] < data['Lower']) & (data['K'] > data['D']), 1, 0)
+    data['Position'] = np.where((data['MACD'] > data['Signal_Line']) & (data['J'] > 0) & (position == 0) & (data['Close'] < data['MA']) & (data['K'] > data['D']), 1, 0)
     data['Position'] = np.where((data['MACD'] < data['Signal_Line']) & (data['J'] <= 0) & (data['Close'] < data['MA']) & (data['K'] < data['D']), -1, data['Position'])
 
 def backtest_strategy(data):

@@ -11,6 +11,7 @@ token5 = 'whW7Rz136t5OvtOViCxTlSRVf2YAbC7CQxDUpTv8ulm'
 token6 = 'aZl13q5eZsBGjzcK4LQNagbu9FkoT0HD1lvWhY3tiRt'
 token7 = 'Qun8UfoKnI9jPD1R4GsHYv13ku0R1BfgbZQLqzKR677'
 token8 = 'HqCINpOMHwOTuaT4CCLzGKwavLIY46wOYxPPdB68dfD'
+token9 = '3CcJfPMRqqLzp3IeXV3ZdMQcJxizIUstxhFxwvV3cYo'
 
 def lineNotifyMessage(token, msg):
     headers = {
@@ -26,266 +27,312 @@ def lineNotifyMessage(token, msg):
 data = []
 FTP= []
 Lostdata = []
-mydb = mysql.connector.connect(host="35.236.181.75", user="Phil", password="Qwe751212", port=3306,
+mydb = mysql.connector.connect(host="localhost", user="Phil", password="Qwe751212", port=3306,
                                database="vena_dds_global")
 
-sql = "SELECT * FROM DataCount ORDER BY Date DESC, COUNT DESC"
-sql1 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and Off_grid = 'F' and FTPupload ='F'"
-sql2 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
-sql3 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and FTPupload = 'T'"
-cursor1 = mydb.cursor()
-cursor1.execute(sql1)
-Online = cursor1.fetchall()
-print(Online)
-cursor2 = mydb.cursor()
-cursor2.execute(sql2)
-DASdata1 = cursor2.fetchall()
-print(DASdata1)
-cursor3 = mydb.cursor()
-cursor3.execute(sql3)
-FTPdata = cursor3.fetchall()
-
-for i in range(len(Online)):
-    for j in range(len(DASdata1)):
-        if (set(Online[i]) < set(DASdata1[j])) == True:
-            data.append(DASdata1[j])
-
-for q in range(len(FTPdata)):
-    for w in range(len(DASdata1)):
-        if (set(FTPdata[q]) < set(DASdata1[w])) == True:
-            FTP.append(DASdata1[w])
-#intersection = [x for x in Online for y in DASdata if x == y]
-
-
-for k in data:
-    ID, date, DAS, Count, Insertdate = k
-    if (int(Count) < 1100):
-        Lostdata.append(DAS)
-
-for y in FTP:
-    ID, date, DAS, Count, Insertdate = y
-    if (int(Count) < 700):
-        Lostdata.append(DAS)
-num1 = len(Lostdata)
-if num1 <= 0:
-    message = "OK"
-    lineNotifyMessage(token1, message)
-if num1 > 0:
-    #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
-    message = (('缺資料機台共'+str(num1)+'台\n'), sorted((Lostdata)))
-    lineNotifyMessage(token1, message)
-
-
-offgrid = []
-offgridLostdata = []
-sql4 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
-cursor4 = mydb.cursor()
-cursor4.execute(sql4)
-offgrid = cursor4.fetchall()
-num2 = len(offgrid)
-offgriddata = offgrid[53:73]
-offgriddata1 = offgrid[132:138]
-offgriddata2 = offgrid[146:153]
-
-for i in offgriddata:
-    ID, date, DAS, Count, Insertdate = i
-    if (int(Count) < 360):
-        offgridLostdata.append(DAS)
-for j in offgriddata1:
-    ID, date, DAS, Count, Insertdate = j
-    if (int(Count) < 360):
-        offgridLostdata.append(DAS)
-for k in offgriddata2:
-    ID, date, DAS, Count, Insertdate = k
-    if (int(Count) < 360):
-        offgridLostdata.append(DAS)
-
-num2 = len(offgridLostdata)
-if num2 <= 0:
-    message = "OK"
-    lineNotifyMessage(token6, message)
-if num2 > 0:
-    message = ('缺資料機台共'+str(num2)+'台\n'), offgridLostdata
-    lineNotifyMessage(token6, message)
+# sql = "SELECT * FROM DataCount ORDER BY Date DESC, COUNT DESC"
+# sql1 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and Off_grid = 'F' and FTPupload ='F'"
+# sql2 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
+# sql3 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and FTPupload = 'T'"
+# cursor1 = mydb.cursor()
+# cursor1.execute(sql1)
+# Online = cursor1.fetchall()
+# print(Online)
+# cursor2 = mydb.cursor()
+# cursor2.execute(sql2)
+# DASdata1 = cursor2.fetchall()
+# print(DASdata1)
+# cursor3 = mydb.cursor()
+# cursor3.execute(sql3)
+# FTPdata = cursor3.fetchall()
 #
+# for i in range(len(Online)):
+#     for j in range(len(DASdata1)):
+#         if (set(Online[i]) < set(DASdata1[j])) == True:
+#             data.append(DASdata1[j])
+#
+# for q in range(len(FTPdata)):
+#     for w in range(len(DASdata1)):
+#         if (set(FTPdata[q]) < set(DASdata1[w])) == True:
+#             FTP.append(DASdata1[w])
+# #intersection = [x for x in Online for y in DASdata if x == y]
+#
+#
+# for k in data:
+#     ID, date, DAS, Count, Insertdate = k
+#     if (int(Count) < 1100):
+#         Lostdata.append(DAS)
+#
+# for y in FTP:
+#     ID, date, DAS, Count, Insertdate = y
+#     if (int(Count) < 700):
+#         Lostdata.append(DAS)
+# num1 = len(Lostdata)
+# if num1 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token1, message)
+# if num1 > 0:
+#     #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
+#     message = (('缺資料機台共'+str(num1)+'台\n'), sorted((Lostdata)))
+#     lineNotifyMessage(token1, message)
+#
+# #自檢2
+#
+# offgrid = []
+# offgridLostdata = []
+# sql4 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
+# cursor4 = mydb.cursor()
+# cursor4.execute(sql4)
+# offgrid = cursor4.fetchall()
+# num2 = len(offgrid)
+# offgriddata = offgrid[53:73]
+# offgriddata1 = offgrid[132:138]
+# offgriddata2 = offgrid[146:153]
+#
+# for i in offgriddata:
+#     ID, date, DAS, Count, Insertdate = i
+#     if (int(Count) < 360):
+#         offgridLostdata.append(DAS)
+# for j in offgriddata1:
+#     ID, date, DAS, Count, Insertdate = j
+#     if (int(Count) < 360):
+#         offgridLostdata.append(DAS)
+# for k in offgriddata2:
+#     ID, date, DAS, Count, Insertdate = k
+#     if (int(Count) < 360):
+#         offgridLostdata.append(DAS)
+#
+# num2 = len(offgridLostdata)
+# if num2 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token6, message)
+# if num2 > 0:
+#     message = ('缺資料機台共'+str(num2)+'台\n'), offgridLostdata
+#     lineNotifyMessage(token6, message)
+#
+# #自檢3
+#
+# CloseErr = []
+# Closedata = []
+# sql5 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
+# sql6 = "SELECT DAS, Closecheck FROM DAS2_closecheck_XX where Insert_date=(SELECT DATE_FORMAT(CURDATE(),'%Y/%m/%d'))"
+# cursor5 = mydb.cursor()
+# cursor5.execute(sql5)
+# Close = cursor5.fetchall()
+# #print(Online)
+# cursor6 = mydb.cursor()
+# cursor6.execute(sql6)
+# DASdata2 = cursor6.fetchall()
+# #print(DASdata)
+# for i in range(len(Close)):
+#     for j in range(len(DASdata2)):
+#         if (set(Close[i]) < set(DASdata2[j])) == True:
+#             Closedata.append(DASdata2[j])
+# print(Closedata)
+# #intersection = [x for x in Online for y in DASdata if x == y]
+# for k in Closedata:
+#     DAS, Closecheck = k
+#     if (int(Closecheck) > 0):
+#         CloseErr.append(DAS)
+#         print(DAS)
+# num3 = len(CloseErr)
+#
+# if num3 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token3, message)
+# if  num3 > 0:
+#     message = (('未正常關蓋機台共' + str(num3) + '台\n'), CloseErr)
+#     lineNotifyMessage(token3, message)
+#
+# #自檢4
+#
+# OpenErr= []
+# Opendata = []
+# sql7 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
+# sql8 = "SELECT DAS, Opencheck FROM DAS2_opencheck_XX where Insert_date=(SELECT DATE_FORMAT(CURDATE(),'%Y/%m/%d'))"
+# cursor7 = mydb.cursor()
+# cursor7.execute(sql7)
+# Open = cursor7.fetchall()
+# #print(Online)
+# cursor8 = mydb.cursor()
+# cursor8.execute(sql8)
+# DASdata3 = cursor8.fetchall()
+# #print(DASdata)
+# for i in range(len(Open)):
+#     for j in range(len(DASdata3)):
+#         if (set(Open[i]) < set(DASdata3[j])) == True:
+#             Opendata.append(DASdata3[j])
+# #intersection = [x for x in Online for y in DASdata if x == y]
+# for k in Opendata:
+#     DAS, Opencheck = k
+#     if (int(Opencheck) > 0):
+#         OpenErr.append(DAS)
+# num4 = len(OpenErr)
+#
+# if num4 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token2, message)
+# if  num4 > 0:
+#     message = (('未正常開蓋機台共' + str(num4) + '台\n'), OpenErr)
+#     lineNotifyMessage(token2, message)
+#
+# #自檢5
+# Threedata1 = []
+# FTP1 = []
+# Lostdata1 = []
+# Lost = []
+# sql9 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and Off_grid = 'F' and FTPupload ='F'"
+# sql10 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where date_sub(curdate(), interval 3 day)<=Insert_date"
+# sql11 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and FTPupload = 'T'"
+# cursor9 = mydb.cursor()
+# cursor9.execute(sql9)
+# Three = cursor9.fetchall()
+# cursor10 = mydb.cursor()
+# cursor10.execute(sql10)
+# DASdata4 = cursor10.fetchall()
+# cursor11 = mydb.cursor()
+# cursor11.execute(sql11)
+# FTPdata1 = cursor11.fetchall()
+#
+# for i in range(len(Three)):
+#     for j in range(len(DASdata4)):
+#         if (set(Three[i]) < set(DASdata4[j])) == True:
+#             Threedata1.append(DASdata4[j])
+#
+# for q in range(len(FTPdata1)):
+#     for w in range(len(DASdata4)):
+#         if (set(FTPdata1[q]) < set(DASdata4[w])) == True:
+#             FTP1.append(DASdata4[w])
+# #intersection = [x for x in Online for y in DASdata if x == y]
+#
+#
+# for k in Threedata1:
+#     ID, date, DAS, Count, Insertdate = k
+#     if (int(Count) < 1100):
+#         Lostdata.append(DAS)
+#         if Lostdata.count(DAS) >= 4:
+#             Lost.append(DAS)
+# num5 = len(set(Lost))
+# if num5 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token5, message)
+# if num5 > 0:
+#     #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
+#     message = (('共'+str(num5)+'台\n'), sorted(set(Lost)))
+#     lineNotifyMessage(token5, message)
+#
+# #自檢6
+#
+# DASID = []
+# soiling = []
+# datastr = ''
+# today = time.strftime('%Y/%m')
+# date = int(time.strftime('%d')) - 1
+# yesterday = "'%s/%02d'" % (today, date)
+# i = 0
+# while i < 300:
+#     try:
+#         #datetime = "FROM DAS2_Irr_S where Date='2022/09/01'"
+#         datetime = ("%s%s" % ("FROM DAS2_Irr_S where Date=", yesterday))
+#         #print(datetime)
+#         #sql = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
+#         sql12 = "%s %s%s %s" % ("SELECT", "DAS2_", i, datetime)
+#         DAS = 'DAS2_' + str(i)
+#         cursor12 = mydb.cursor()
+#         cursor12.execute(sql12)
+#         DASdata5 = cursor12.fetchall()
+#         i = i + 1
+#         if float(DASdata5[0][0]) < (-0.01):
+#             DASID.append(DAS)
+#             soiling.append(DASdata5[0][0])
+#     except Exception as e:
+#         i = i + 1
+#         print(e)
+# num6 = len(DASID)
+# print(num6)
+# data5 = list(zip(DASID, soiling))
+#
+# if num6 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token4, message)
+# if num6 >= 1:
+#     for y in data5:
+#         datastr = datastr + str(y[0]) + ',' + str(y[1]) + '\n'
+#     message = (('負Soiling機台共' + str(num6) + '台\n'), datastr)
+#     lineNotifyMessage(token4, message)
+#
+# #自檢7
+#
+# SevenDays8 = []
+# SevenDays0 = []
+# sql41 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
+# cursor41 = mydb.cursor()
+# cursor41.execute(sql41)
+# ESH = cursor41.fetchall()
+# for i in range(len(ESH)):
+#     sql4 = '%s%s%s' % ("SELECT ESH_Correct FROM ", str(ESH[i][0]), '.ESH_Correct Where date_sub(curdate(), interval 7 '
+#                                                                    'day)<=date')
+#     cursor4 = mydb.cursor()
+#     cursor4.execute(sql4)
+#     ESHC = cursor4.fetchall()
+#     try:
+#         for j in range(7):
+#             if ESHC[j][0] >= 8:
+#                 SevenDays8.append(ESH[i][0])
+#             if ESHC[j][0] <= 0:
+#                 SevenDays0.append(ESH[i][0])
+#     except Exception as e:
+#         print(e)
+# num7 = len(set(SevenDays8))
+# num8 = len(set(SevenDays0))
+# if num7 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token7, message)
+# if num7 > 0:
+#     message = ('共'+str(num7)+'台\n'), set(SevenDays8)
+#     lineNotifyMessage(token7, message)
+#
+# if num8 <= 0:
+#     message = "OK"
+#     lineNotifyMessage(token8, message)
+# if num8 > 0:
+#     message = ('共'+str(num8)+'台\n'), set(SevenDays0)
+#     lineNotifyMessage(token8, message)
 
-CloseErr = []
-Closedata = []
-sql5 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
-sql6 = "SELECT DAS, Closecheck FROM DAS2_closecheck_XX where Insert_date=(SELECT DATE_FORMAT(CURDATE(),'%Y/%m/%d'))"
-cursor5 = mydb.cursor()
-cursor5.execute(sql5)
-Close = cursor5.fetchall()
-#print(Online)
-cursor6 = mydb.cursor()
-cursor6.execute(sql6)
-DASdata2 = cursor6.fetchall()
-#print(DASdata)
-for i in range(len(Close)):
-    for j in range(len(DASdata2)):
-        if (set(Close[i]) < set(DASdata2[j])) == True:
-            Closedata.append(DASdata2[j])
-print(Closedata)
-#intersection = [x for x in Online for y in DASdata if x == y]
-for k in Closedata:
-    DAS, Closecheck = k
-    if (int(Closecheck) > 0):
-        CloseErr.append(DAS)
-        print(DAS)
-num3 = len(CloseErr)
+#自檢8
 
-if num3 <= 0:
-    message = "OK"
-    lineNotifyMessage(token3, message)
-if  num3 > 0:
-    message = (('未正常關蓋機台共' + str(num3) + '台\n'), CloseErr)
-    lineNotifyMessage(token3, message)
+overoffset = []
+try:
+    cursoroffset = mydb.cursor()
+    cursoroffset.execute("SHOW DATABASES")
+    databases = cursoroffset.fetchall()
+    for db_info in databases:
+        db_name = db_info[0]
+        #print(db_name)
+        try:
+            conn_db = mysql.connector.connect(host="localhost", user="Phil", password="Qwe751212", port=3306, database=db_name)
+            cursor_db = conn_db.cursor()
+            cursor_db.execute(("SHOW TABLES LIKE 'Daily_soiling'"))
+            table_exists = cursor_db.fetchall()
+            if table_exists:
+                select_query = """
+                                SELECT `date`, `Clean_Offset(%)`
+                                FROM Daily_soiling
+                                WHERE date_sub(curdate(), interval 1 day)<=date
+                                """
+                cursor_db.execute(select_query)
+                result = cursor_db.fetchall()
+                if result[0][12] > 5:
+                    overoffset.append(db_name + ',Offset=' + str(result[0][12]) + '%')
 
-
-OpenErr= []
-Opendata = []
-sql7 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
-sql8 = "SELECT DAS, Opencheck FROM DAS2_opencheck_XX where Insert_date=(SELECT DATE_FORMAT(CURDATE(),'%Y/%m/%d'))"
-cursor7 = mydb.cursor()
-cursor7.execute(sql7)
-Open = cursor7.fetchall()
-#print(Online)
-cursor8 = mydb.cursor()
-cursor8.execute(sql8)
-DASdata3 = cursor8.fetchall()
-#print(DASdata)
-for i in range(len(Open)):
-    for j in range(len(DASdata3)):
-        if (set(Open[i]) < set(DASdata3[j])) == True:
-            Opendata.append(DASdata3[j])
-#intersection = [x for x in Online for y in DASdata if x == y]
-for k in Opendata:
-    DAS, Opencheck = k
-    if (int(Opencheck) > 0):
-        OpenErr.append(DAS)
-num4 = len(OpenErr)
-
-if num4 <= 0:
-    message = "OK"
-    lineNotifyMessage(token2, message)
-if  num4 > 0:
-    message = (('未正常開蓋機台共' + str(num4) + '台\n'), OpenErr)
-    lineNotifyMessage(token2, message)
-
-Threedata1 = []
-FTP1 = []
-Lostdata1 = []
-Lost = []
-sql9 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and Off_grid = 'F' and FTPupload ='F'"
-sql10 = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where date_sub(curdate(), interval 3 day)<=Insert_date"
-sql11 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T' and FTPupload = 'T'"
-cursor9 = mydb.cursor()
-cursor9.execute(sql9)
-Three = cursor9.fetchall()
-cursor10 = mydb.cursor()
-cursor10.execute(sql10)
-DASdata4 = cursor10.fetchall()
-cursor11 = mydb.cursor()
-cursor11.execute(sql11)
-FTPdata1 = cursor11.fetchall()
-
-for i in range(len(Three)):
-    for j in range(len(DASdata4)):
-        if (set(Three[i]) < set(DASdata4[j])) == True:
-            Threedata1.append(DASdata4[j])
-
-for q in range(len(FTPdata1)):
-    for w in range(len(DASdata4)):
-        if (set(FTPdata1[q]) < set(DASdata4[w])) == True:
-            FTP1.append(DASdata4[w])
-#intersection = [x for x in Online for y in DASdata if x == y]
-
-
-for k in Threedata1:
-    ID, date, DAS, Count, Insertdate = k
-    if (int(Count) < 1100):
-        Lostdata.append(DAS)
-        if Lostdata.count(DAS) >= 4:
-            Lost.append(DAS)
-num5 = len(set(Lost))
-if num5 <= 0:
-    message = "OK"
-    lineNotifyMessage(token5, message)
-if num5 > 0:
-    #message = '%s\n%s:%s%s:%s\n%s:%s' % ('\n缺資料機台', 'Date', date1, 'ID', DAS1, 'Count', Count1)
-    message = (('共'+str(num5)+'台\n'), sorted(set(Lost)))
-    lineNotifyMessage(token5, message)
-
-DASID = []
-soiling = []
-datastr = ''
-today = time.strftime('%Y/%m')
-date = int(time.strftime('%d')) - 1
-yesterday = "'%s/%02d'" % (today, date)
-i = 0
-while i < 300:
-    try:
-        #datetime = "FROM DAS2_Irr_S where Date='2022/09/01'"
-        datetime = ("%s%s" % ("FROM DAS2_Irr_S where Date=", yesterday))
-        #print(datetime)
-        #sql = "SELECT ID, Date, DAS, COUNT, Insert_date FROM DAS2_dailycount_XX where Insert_date=(SELECT DATE_FORMAT(NOW(),'%Y/%m/%d'))"
-        sql12 = "%s %s%s %s" % ("SELECT", "DAS2_", i, datetime)
-        DAS = 'DAS2_' + str(i)
-        cursor12 = mydb.cursor()
-        cursor12.execute(sql12)
-        DASdata5 = cursor12.fetchall()
-        i = i + 1
-        if float(DASdata5[0][0]) < (-0.01):
-            DASID.append(DAS)
-            soiling.append(DASdata5[0][0])
-    except Exception as e:
-        i = i + 1
-        print(e)
-num6 = len(DASID)
-print(num6)
-data5 = list(zip(DASID, soiling))
-
-if num6 <= 0:
-    message = "OK"
-    lineNotifyMessage(token4, message)
-if num6 >= 1:
-    for y in data5:
-        datastr = datastr + str(y[0]) + ',' + str(y[1]) + '\n'
-    message = (('負Soiling機台共' + str(num6) + '台\n'), datastr)
-    lineNotifyMessage(token4, message)
-
-SevenDays8 = []
-SevenDays0 = []
-sql41 = "SELECT DDS_Comany_DatabaseName FROM machines where LinePost = 'T'"
-cursor41 = mydb.cursor()
-cursor41.execute(sql41)
-ESH = cursor41.fetchall()
-for i in range(len(ESH)):
-    sql4 = '%s%s%s' % ("SELECT ESH_Correct FROM ", str(ESH[i][0]), '.ESH_Correct Where date_sub(curdate(), interval 7 '
-                                                                   'day)<=date')
-    cursor4 = mydb.cursor()
-    cursor4.execute(sql4)
-    ESHC = cursor4.fetchall()
-    try:
-        for j in range(7):
-            if ESHC[j][0] >= 8:
-                SevenDays8.append(ESH[i][0])
-            if ESHC[j][0] <= 0:
-                SevenDays0.append(ESH[i][0])
-    except Exception as e:
-        print(e)
-num7 = len(set(SevenDays8))
-num8 = len(set(SevenDays0))
-if num7 <= 0:
-    message = "OK"
-    lineNotifyMessage(token7, message)
-if num7 > 0:
-    message = ('共'+str(num7)+'台\n'), set(SevenDays8)
-    lineNotifyMessage(token7, message)
-
-if num8 <= 0:
-    message = "OK"
-    lineNotifyMessage(token8, message)
-if num8 > 0:
-    message = ('共'+str(num8)+'台\n'), set(SevenDays0)
-    lineNotifyMessage(token8, message)
+        except Exception as e:
+            print(e)
+    num9 = len(overoffset)
+    if num9 <= 0:
+        message = "OK"
+        lineNotifyMessage(token9, message)
+    if num9 > 0:
+        message = ('Offset超過5%共'+str(num9)+'台\n'), set(overoffset)
+        lineNotifyMessage(token9, message)
+except Exception as e:
+    print(e)

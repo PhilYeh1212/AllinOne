@@ -12,8 +12,8 @@ startdate = (date.today() + timedelta(days=-5)).strftime("%Y-%m-%d")
 # print(startdate)
 Buystock = 0
 Sellstock = 0
-SellD = 0
-SellU = 0
+sellD = 0
+sellU = 0
 buyD = 0
 buyU = 0
 SellDs = 0
@@ -49,11 +49,11 @@ api.login(api_key="H6WLFjAN6QaRKucnGBm9TgEGpghBNNhafRyj3xjMLp7M",
 
 api.fetch_contracts(contract_download=True)
 # print(api.Contracts)
-contracts = [api.Contracts.Futures.MXF['MXF202309']]
+contracts = [api.Contracts.Futures.MXF['MXF202310']]
 today = time.strftime('%Y-%m-%d')
 # print(today)
-symbol = "TXFF"  # 台指期代號
-enddate = today  # 結束日期
+symbol = "TXFF"
+enddate = today
 
 # def quote_callback(exchange:Exchange, tick:TickFOPv1):
 #     dftick = pd.DataFrame({**tick})
@@ -76,7 +76,7 @@ while True:
     snapshots = api.snapshots(contracts)
     if inTI - LastTI >= 60:
         kbars = api.kbars(
-            contract=api.Contracts.Futures.MXF['MXF202309'],
+            contract=api.Contracts.Futures.MXF['MXF202310'],
             start=startdate, end=enddate
         )
         # 將Tick數據轉換為DataFrame
@@ -93,18 +93,22 @@ while True:
         df['J'] = 3 * df['K'] - 2 * df['D']
         # if (df['K'].tail(1).values > 20) & (df['Close'].tail(1).values > df['Lower'].tail(1).values):
 
-        if (df['K'].tail(1).values < df['D'].tail(1).values) & (df['J'].tail(1).values > 0) & (Buystock == 0) & (df['Close'].tail(1).values < df['Lower'].tail(1).values) &(df['MACD'].tail(1).values > df['Signla_Line'].tail(1).values):
+        if (df['K'].tail(1).values < df['D'].tail(1).values) & (df['J'].tail(1).values > 0) & (Buystock == 0) & (df['Close'].tail(1).values < df['Lower'].tail(1).values) &(df['MACD'].tail(1).values > df['Signal_Line'].tail(1).values):
             buyU = 2
-        elif (df['K'].tail(1).values > df['D'].tail(1).values) & (df['J'].tail(1).values < 0) & (df['Close'].tail(1).values > df['MA'].tail(1).values) &(df['MACD'].tail(1).values < df['Signla_Line'].tail(1).values):
+        elif (df['K'].tail(1).values > df['D'].tail(1).values) & (df['J'].tail(1).values < 0) & (df['Close'].tail(1).values > df['MA'].tail(1).values) &(df['MACD'].tail(1).values < df['Signal_Line'].tail(1).values):
             sellU = 2
-        # df['Signal'] = df['BuySignal'] + df['SellSignal']  # 總交易訊號
 
-        # 設置交易策略
-        # 執行交易
+        if (df['K'].tail(1).values > df['D'].tail(1).values) & (df['J'].tail(1).values < 0) & (Sellstock == 0) & (df['Close'].tail(1).values > df['MA'].tail(1).values) &(df['MACD'].tail(1).values < df['Signal_Line'].tail(1).values):
+            sellD = 2
+        if (df['K'].tail(1).values < df['D'].tail(1).values) & (df['J'].tail(1).values > 0) & (df['Close'].tail(1).values < df['Lower'].tail(1).values) &(df['MACD'].tail(1).values > df['Signal_Line'].tail(1).values):
+            buyD = 2
+        # df['Signal'] = df['BuySignal'] + df['SellSignal']
+
+
         # signal = row['Signal']
         # close = row['Close']
         # print(signal, close)
-        if buyU == 2 and Buystock == 0:  # 買入訊號且無持倉
+        if buyU == 2 and Buystock == 0:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "B ")
@@ -121,7 +125,7 @@ while True:
             #     quantity=1,
             # )
             # positions.append(order)
-        if SellU == 2 and Buystock == 1:  # 賣出訊號且有持倉
+        if sellU == 2 and Buystock == 1:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "S ")
@@ -137,7 +141,7 @@ while True:
             #     quantity=1,
             # )
             # api.update_status([order])
-        if SellD == 2 and Buystock == 0:  # 賣出訊號且無持倉
+        if sellD == 2 and Buystock == 0:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "S ")
@@ -145,7 +149,7 @@ while True:
             lineNotifyMessage(token, message)
             Buystock += 1
 
-        if buyD == 2 and Buystock == 1:  # 買入訊號且有持倉
+        if buyD == 2 and Buystock == 1:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "B ")
@@ -153,6 +157,6 @@ while True:
             message = '%s %s %s' % (current_time, "B ", snapshots[0].close)
             lineNotifyMessage(token, message)
             buyU = 0
-        print(df['K'].tail(1).values, df['D'].tail(1).values, df['Lower'].tail(1).values, df['MA'].tail(1).values,
-              df['Upper'].tail(1).values, df['Close'].tail(1).values)
+        print(df['K'].tail(1).values, df['D'].tail(1).values, df['J'].tail(1).values, df['Lower'].tail(1).values, df['MA'].tail(1).values,
+              df['Upper'].tail(1).values, df['Close'].tail(1).values, df['MACD'].tail(1).values, df['Signal_Line'].tail(1).values)
         LastTI = time.time()

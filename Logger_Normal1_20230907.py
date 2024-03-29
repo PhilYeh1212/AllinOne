@@ -20,7 +20,7 @@ raw22 = ''
 Alarmall = ''
 if not os.path.isdir('%s\%s' % (r'D:\FSLogger\temp', today)):
     os.mkdir('%s\%s' % (r'D:\FSLogger\temp', today))
-with open(r'D:\FSLogger\FS103.csv', newline='') as csvfile:
+with open(r'D:\FSLogger\FS105.csv', newline='') as csvfile:
     row = csv.reader(csvfile, delimiter=',')
     for sitecode in row:
         try:
@@ -30,16 +30,16 @@ with open(r'D:\FSLogger\FS103.csv', newline='') as csvfile:
             sql1 = "%s%s.%s" % ('SELECT Irr, T_PV, daq_time, daq_date FROM FSLG_', sitecode[0], 'T1_head Order by daq_date desc, daq_time desc Limit 1')
             num = int(sitecode[1])
             #sql2 = "%s%s.%s%s" % ('SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, INVXX01, INVXX02, INVXX03, daq_time, daq_date FROM FSLG_',sitecode[0], 'T2_inv Order by daq_date desc, daq_time >= %s, INVID asc Limit ', str(sitecode[1]))
-            sql2 = '%s%s' % ("""
+            sql2 = """
             SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, 
             INVXX01, INVXX02, INVXX03, daq_time, daq_date, INVXX07
              FROM T2_inv
             WHERE
                 daq_date = DATE_FORMAT(NOW(), '%Y/%m/%d')
                 AND daq_time < DATE_FORMAT(NOW(), '%H:%i:00')
-                AND daq_time > DATE_FORMAT(NOW() - INTERVAL 5 MINUTE, '%h:%i:%s')
+                AND daq_time > DATE_FORMAT(NOW() - INTERVAL 10 MINUTE, '%h:%i:%s')
             ORDER BY uid DESC, invid asc
-        """, str(sitecode[1]))
+        """
             cursor1 = mydb.cursor()
             cursor1.execute(sql1)
             irrins = cursor1.fetchall()

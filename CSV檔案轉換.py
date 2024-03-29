@@ -6,7 +6,7 @@ import socket
 
 datafiles = os.listdir(r'C:\_Phil\02_Project\_ChenyaPVQA\data')
 path = r'C:\_Phil\02_Project\_ChenyaPVQA\data'
-newpath = r'C:\_Phil\02_Project\_ChenyaPVQA\forChenya\5月.csv'
+newpath = r'C:\_Phil\02_Project\_ChenyaPVQA\forChenya05\20231230-Sea1.csv'
 with open(newpath, 'a+', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(

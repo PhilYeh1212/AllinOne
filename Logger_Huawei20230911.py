@@ -10,6 +10,7 @@ today = time.strftime('%y%m%d', time.localtime())
 URL1 = 'https://pmsdata.formosasolar.com.tw/realtime/extel'
 URL2 = 'https://pmsdata.formosasolar.com.tw/realtime/extel/alarm'
 mydb = mysql.connector.connect(host="35.221.247.182", user="root", password="Oerlikon;1234", port=3306, database="FS_Logger_Global")
+#mydb = mysql.connector.connect(host="localhost", user="root", password="Oerlikon;1234", port=3306, database="FS_Logger_Global")
 Today = time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())
 fivemin = 0
 sitecode = []
@@ -646,7 +647,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     # print(num)
                     sql2 = "%s%s.%s%s" % (
                     'SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, INVXX01, INVXX02, INVXX03, daq_time, daq_date'
-                    ',INVXX17, INVXX16, INVXX22, INVXX21, INVXX07 FROM FSLG_', sitecode[0], 'T2_inv Order by daq_date desc, daq_time desc, INVID asc Limit ',
+                    ',INVXX17, INVXX16, INVXX22, INVXX21, INVXX07, INVXX26, INVXX25, INVXX30, INVXX29 FROM FSLG_', sitecode[0], 'T2_inv Order by daq_date desc, daq_time desc, INVID asc Limit ',
                     str(sitecode[1]))
                     cursor1 = mydb.cursor()
                     cursor1.execute(sql1)
@@ -690,6 +691,18 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                            INVdata[j][14],INVdata[j][18], INVdata[j][19],
                                            '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19])/1000) + '\n')
                                 RAWline = RAWline + raw5
+                                raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '7', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                           '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                                RAWline = RAWline + raw7
+                                raw9 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '9', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][23], INVdata[j][24],
+                                           '%.2f' % (float(INVdata[j][23]) * float(INVdata[j][24]) / 1000) + '\n')
+                                RAWline = RAWline + raw9
                             else:
                                 raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
                                        (
@@ -719,6 +732,18 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                            INVdata[j][14], INVdata[j][18], INVdata[j][19],
                                            '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19])/1000) + '\n')
                                 RAWline = RAWline + raw5
+                                raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M', inverternum, '7', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                           '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                                RAWline = RAWline + raw7
+                                raw9 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M', inverternum, '9', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][23], INVdata[j][24],
+                                           '%.2f' % (float(INVdata[j][23]) * float(INVdata[j][24]) / 1000) + '\n')
+                                RAWline = RAWline + raw9
                         else:
                             if inverternum <= 9:
                                 raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
@@ -745,6 +770,18 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                            INVdata[j][14],INVdata[j][18], INVdata[j][19],
                                            '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19])/1000) + '\n')
                                 RAWline = RAWline + raw5
+                                raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '7', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                           '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                                RAWline = RAWline + raw7
+                                raw9 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '9', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][23], INVdata[j][24],
+                                           '%.2f' % (float(INVdata[j][23]) * float(INVdata[j][24]) / 1000) + '\n')
+                                RAWline = RAWline + raw9
                             else:
                                 raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
                                        (
@@ -774,6 +811,18 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                            INVdata[j][14], INVdata[j][18], INVdata[j][19],
                                            '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19])/1000) + '\n')
                                 RAWline = RAWline + raw5
+                                raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M', inverternum, '7', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                           '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                                RAWline = RAWline + raw7
+                                raw9 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                       (
+                                           sitecode[0] + '01', sitecode[0] + 'M', inverternum, '9', INVdata[j][15],
+                                           INVdata[j][14], INVdata[j][23], INVdata[j][24],
+                                           '%.2f' % (float(INVdata[j][23]) * float(INVdata[j][24]) / 1000) + '\n')
+                                RAWline = RAWline + raw9
                     with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLogger\temp', today, 'API_Log', today, sitecode[0], 'txt'),
                               'a+') as RAWtxt:
                         RAWtxt.write(RAWline)
@@ -783,6 +832,8 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     raw1 = ''
                     raw3 = ''
                     raw5 = ''
+                    raw7 = ''
+                    raw9 = ''
                     S001 = ''
                     S002 = ''
                     RAWline = ''
@@ -794,6 +845,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     sql2 = "%s%s.%s%s" % (
                     'SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, INVXX01, INVXX02, INVXX03, daq_time, daq_date'
                     ',INVXX17, INVXX16, INVXX22, INVXX21, INVXX26, INVXX25, INVXX30, INVXX29, INVXX34, INVXX33, INVXX07 FROM FSLG_', sitecode[0], 'T2_inv Order by daq_date desc, daq_time desc, INVID asc Limit ', str(sitecode[1]))
+                    #26
                     cursor1 = mydb.cursor()
                     cursor1.execute(sql1)
                     irrins = cursor1.fetchall()
@@ -1014,7 +1066,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     # print(num)
                     sql2 = "%s%s.%s%s" % (
                     'SELECT INVXX11, INVXX10, INVXX08, INVXX13, INVXX12, INVXX20, INVXX19, INVXX18, INVXX05, INVXX15, INVXX14, INVXX01, INVXX02, INVXX03, daq_time, daq_date'
-                    ',INVXX17, INVXX16, INVXX22, INVXX21, INVXX07 FROM FSLG_', sitecode[0], 'T2_inv Order by daq_date desc, daq_time desc, INVID asc Limit ',
+                    ',INVXX17, INVXX16, INVXX22, INVXX21, INVXX07, INVXX26, INVXX25 FROM FSLG_', sitecode[0], 'T2_inv Order by daq_date desc, daq_time desc, INVID asc Limit ',
                     str(sitecode[1]))
                     cursor1 = mydb.cursor()
                     cursor1.execute(sql1)
@@ -1046,13 +1098,6 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                    sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '1', INVdata[j][15], INVdata[j][14],
                                    INVdata[j][0], INVdata[j][1], '%.2f' % (float(INVdata[j][0]) * float(INVdata[j][1]) / 1000) + '\n')
                             RAWline = RAWline + raw1
-                            raw2 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
-                                   (
-                                       sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '2', INVdata[j][15],
-                                       INVdata[j][14],
-                                       INVdata[j][3], INVdata[j][4],
-                                       '%.2f' % (float(INVdata[j][3]) * float(INVdata[j][4]) / 1000) + '\n')
-                            RAWline = RAWline + raw2
                             raw3 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                    (
                                    sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '3', INVdata[j][15], INVdata[j][14],
@@ -1064,6 +1109,12 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                        INVdata[j][14], INVdata[j][18], INVdata[j][19],
                                        '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19])/1000) + '\n')
                             RAWline = RAWline + raw5
+                            raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                   (
+                                       sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '7', INVdata[j][15],
+                                       INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                       '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                            RAWline = RAWline + raw7
                         else:
                             raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
                                    (
@@ -1080,13 +1131,6 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                        INVdata[j][0], INVdata[j][1],
                                        '%.2f' % (float(INVdata[j][0]) * float(INVdata[j][1]) / 1000) + '\n')
                             RAWline = RAWline + raw1
-                            raw2 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
-                                   (
-                                       sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '2', INVdata[j][15],
-                                       INVdata[j][14],
-                                       INVdata[j][3], INVdata[j][4],
-                                       '%.2f' % (float(INVdata[j][3]) * float(INVdata[j][4]) / 1000) + '\n')
-                            RAWline = RAWline + raw2
                             raw3 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                    (
                                        sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '3', INVdata[j][15],
@@ -1100,6 +1144,13 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                        INVdata[j][14], INVdata[j][18], INVdata[j][19],
                                        '%.2f' % (float(INVdata[j][18]) * float(INVdata[j][19]) / 1000) + '\n')
                             RAWline = RAWline + raw5
+                            raw7 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                   (
+                                       sitecode[0] + '01', sitecode[0] + 'M0', inverternum, '7', INVdata[j][15],
+                                       INVdata[j][14], INVdata[j][21], INVdata[j][22],
+                                       '%.2f' % (float(INVdata[j][21]) * float(INVdata[j][22]) / 1000) + '\n')
+                            RAWline = RAWline + raw7
+
                     with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLogger\temp', today, 'API_Log', today, sitecode[0], 'txt'),
                               'a+') as RAWtxt:
                         RAWtxt.write(RAWline)
@@ -1110,6 +1161,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     raw2 = ''
                     raw3 = ''
                     raw5 = ''
+                    raw7 = ''
                     S001 = ''
                     S002 = ''
                     RAWline = ''
@@ -1152,7 +1204,8 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                    (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '3', INVdata[j][15], INVdata[j][14], INVdata[j][9], INVdata[j][10], '%.2f' % (float(INVdata[j][9]) * float(INVdata[j][10]) / 1000) + '\n')
                             RAWline = RAWline + raw3
                             raw4 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
-                                   (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '5', INVdata[j][15], INVdata[j][14], INVdata[j][16], INVdata[j][17], '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
+                                   (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '4', INVdata[j][15], INVdata[j][14], INVdata[j][16], INVdata[j][17], '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
+                            RAWline = RAWline + raw4
                         else:
                             raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
                                    (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '0', INVdata[j][15],INVdata[j][14],'####' + INVdata[j][5], INVdata[j][6], str(float(INVdata[j][2]) / 1000),INVdata[j][7],(INVdata[j][8] + '###'), INVdata[j][20], INVdata[j][12] + '\n')
@@ -1167,7 +1220,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                    (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '3', INVdata[j][15], INVdata[j][14],INVdata[j][9], INVdata[j][10], '%.2f' % (float(INVdata[j][9]) * float(INVdata[j][10]) / 1000) + '\n')
                             RAWline = RAWline + raw3
                             raw4 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
-                                   (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '5', INVdata[j][15],INVdata[j][14], INVdata[j][16], INVdata[j][17], '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
+                                   (sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '4', INVdata[j][15],INVdata[j][14], INVdata[j][16], INVdata[j][17], '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
                             RAWline = RAWline + raw4
                     with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLogger\temp', today, 'API_Log', today, sitecode[0], 'txt'),
                               'a+') as RAWtxt:
@@ -1178,7 +1231,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                     raw1 = ''
                     raw2 = ''
                     raw3 = ''
-                    raw5 = ''
+                    raw4 = ''
                     S001 = ''
                     S002 = ''
                     RAWline = ''
@@ -1236,6 +1289,12 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                                    (
                                        sitecode[0], sitecode[0][0:9] + 'M0', '4', '3', INVdata[j][15], INVdata[j][14], INVdata[j][9], INVdata[j][10], '%.2f' % (float(INVdata[j][9]) * float(INVdata[j][10]) / 1000) + '\n')
                             RAWline = RAWline + raw3
+                            raw4 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                   (
+                                       sitecode[0], sitecode[0][0:9] + 'M0', '4', '4', INVdata[j][15], INVdata[j][14],
+                                       INVdata[j][16], INVdata[j][17],
+                                       '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
+                            RAWline = RAWline + raw4
                         else:
                             inverternum = j + 1
                             raw0 = '%s#%s%s%s#%s %s#%s#%s#%s#%s#%s#%s#%s' % \
@@ -1249,25 +1308,31 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                             RAWline = RAWline + raw0
                             raw1 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                    (
-                                       sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '1', INVdata[j][15],
+                                       sitecode[0], sitecode[0][0:9] + 'M0', '4', '1', INVdata[j][15],
                                        INVdata[j][14],
                                        INVdata[j][0], INVdata[j][1],
                                        '%.2f' % (float(INVdata[j][0]) * float(INVdata[j][1]) / 1000) + '\n')
                             RAWline = RAWline + raw1
                             raw2 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                    (
-                                       sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '2', INVdata[j][15],
+                                       sitecode[0], sitecode[0][0:9] + 'M0', '4', '2', INVdata[j][15],
                                        INVdata[j][14],
                                        INVdata[j][3], INVdata[j][4],
                                        '%.2f' % (float(INVdata[j][3]) * float(INVdata[j][4]) / 1000) + '\n')
                             RAWline = RAWline + raw2
                             raw3 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
                                    (
-                                       sitecode[0], sitecode[0][0:9] + 'M0', inverternum, '2', INVdata[j][15],
+                                       sitecode[0], sitecode[0][0:9] + 'M0', '4', '3', INVdata[j][15],
                                        INVdata[j][14],
                                        INVdata[j][9], INVdata[j][10],
                                        '%.2f' % (float(INVdata[j][9]) * float(INVdata[j][10]) / 1000) + '\n')
                             RAWline = RAWline + raw3
+                            raw4 = '%s#%s%s%s#%s %s#%s#%s#%s' % \
+                                   (
+                                       sitecode[0], sitecode[0][0:9] + 'M0', '4', '4', INVdata[j][15], INVdata[j][14],
+                                       INVdata[j][16], INVdata[j][17],
+                                       '%.2f' % (float(INVdata[j][16]) * float(INVdata[j][17]) / 1000) + '\n')
+                            RAWline = RAWline + raw4
                     with open('%s\%s\%s_%s_%s.%s' % (r'D:\FSLogger\temp', today, 'API_Log', today, sitecode[0], 'txt'),
                               'a+') as RAWtxt:
                         RAWtxt.write(RAWline)
@@ -1277,7 +1342,7 @@ with open(r'D:\FSLogger\FS102.csv', newline='') as csvfile:
                 raw1 = ''
                 raw2 = ''
                 raw3 = ''
-                raw5 = ''
+                raw4 = ''
                 S001 = ''
                 S002 = ''
                 RAWline = ''
