@@ -13,13 +13,9 @@ startdate = (date.today() + timedelta(days=-5)).strftime("%Y-%m-%d")
 Buystock = 0
 Sellstock = 0
 sellD = 0
-sellU = 0
-buyD = 0
 buyU = 0
-SellDs = 0
-SellUs = 0
-buyDs = 0
-buyUs = 0
+CheckPointB = 0
+CheckPointD = 0
 Openner = 0
 token = '4cwTgoUM0Npnnob1D0aUHCYWxN6huiqVF9poI0G1Efe'
 
@@ -135,8 +131,8 @@ while True:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "S ")
-            earn =
-            message = '%s %s %s' % (current_time, "S ", snapshots[0].close)
+            earn = (snapshots[0].close - CheckPointB) * 50
+            message = '%s %s %s' % (current_time, "S ", snapshots[0].close, earn)
             buyU = 0
             lineNotifyMessage(token, message)
             Buystock = 0
@@ -153,6 +149,7 @@ while True:
             now = datetime.now()
             current_time = now.strftime("%y%m%d %H:%M:%S")
             print("Current Time =", current_time, "B ")
+            earn = (CheckPointD - snapshots[0].close) * 50
             message = '%s %s %s' % (current_time, "B ", snapshots[0].close)
             lineNotifyMessage(token, message)
             Buystock = 0
@@ -171,3 +168,4 @@ while True:
             #     quantity=1,
             # )
             # positions.append(order)
+
